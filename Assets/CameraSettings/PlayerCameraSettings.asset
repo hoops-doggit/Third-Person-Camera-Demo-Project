@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3de60f7b8fef2f84db1baa427981bd57, type: 3}
+  m_Name: PlayerCameraSettings
+  m_EditorClassIdentifier: 
+  trackingHeight: 2.68
+  minDistance: 3
+  midDistance: 0.396
+  maxDistance: 9
+  fieldOfView: 60
+  sphereCastRadius: 0.4
+  distanceXpitchCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -90
+      value: 0.1
+      inSlope: -0.0015603403
+      outSlope: -0.0015603403
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.7246622
+    - serializedVersion: 3
+      time: -30.737593
+      value: 0.53107536
+      inSlope: 0.014086512
+      outSlope: 0.014086512
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.45156014
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0.010405647
+      outSlope: 0.010405647
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 90
+      value: 1.5
+      inSlope: -0.002036445
+      outSlope: -0.002036445
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.7119839
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  xFraming: 0
+  yFraming: 0
