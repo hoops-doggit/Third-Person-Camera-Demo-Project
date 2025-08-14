@@ -49,6 +49,8 @@ public class PlayerCameraV2 : MonoBehaviour, IVirtualCamera
 
     private Vector3 _smoothedTrackingPointVelocity;
     private float _smoothedDistanceVelocity;
+    private bool _previouslyWasHidden = false;
+    private Collider _currentObscuringCollider;
 
     public void UpdateCamera() {
         UpdateInput(PlayerInput.Instance.Look, PlayerInput.Instance.CameraDistanceToggle);
@@ -56,16 +58,29 @@ public class PlayerCameraV2 : MonoBehaviour, IVirtualCamera
         float desiredPitch = DesiredPitch(_pitchInput);
         float desiredYaw = DesiredYaw(_yawInput);
         float desiredDistance = DesiredDistance(_distanceZone);
-        desiredDistance = Mathf.SmoothDamp(_cameraParams.distance, desiredDistance, ref _smoothedDistanceVelocity, 0.05f);
 
         Vector3 trackingPoint = _transform.position + Vector3.up * _currentSettings.TrackingHeight;
         
         Vector2 framing = new Vector2(initialSettings.XFraming, initialSettings.YFraming);
-        Quaternion desiredRotation = Quaternion.Euler(desiredPitch, desiredYaw, 0);
-        
-        if (CantSeeAvatar(trackingPoint, desiredRotation * Vector3.back, desiredDistance, out RaycastHit hit)) {
-            desiredDistance = hit.distance;
-        }
+        // Quaternion desiredRotation = Quaternion.Euler(desiredPitch, desiredYaw, 0);
+        //
+        // if (CantSeeAvatar(trackingPoint, desiredRotation * Vector3.back, desiredDistance, out RaycastHit hit)) {
+        //     desiredDistance = hit.distance;
+        //     
+        //     // If we previously could see the avatar then we know we are about to crash zoom and break the 30 degree rule.
+        //     // To lessen the impact a little, we can set the current distance of the camera to be a little closer to the hit
+        //     // collider than we would ordinarily allow. This way, by the time the distance smoothing occurs, we'll smooth into
+        //     // the cameras new distance from close to the obscuring object without passing through it. 
+        //     if (!_previouslyWasHidden ||  hit.collider != _currentObscuringCollider) {
+        //         _previouslyWasHidden = true;
+        //         _currentObscuringCollider = hit.collider;
+        //         
+        //         _cameraParams.distance = Mathf.Min(desiredDistance + _currentSettings.SphereCastRadius, _cameraParams.distance);
+        //     }
+        // } else {
+        //     _previouslyWasHidden = false;
+        //     _currentObscuringCollider = hit.collider;
+        // }
         
         ApplyCameraValues(trackingPoint, desiredPitch, desiredYaw, desiredDistance, framing);
     }
@@ -74,8 +89,33 @@ public class PlayerCameraV2 : MonoBehaviour, IVirtualCamera
         _cameraParams.trackingPoint = trackingPoint;
         _cameraParams.pitch = desiredPitch;
         _cameraParams.yaw = desiredYaw;
-        _cameraParams.distance = desiredDistance;
         _cameraParams.framing = framing;
+
+        Location intendedLocation = CameraUtils.SetParams(FieldOfView(), in _cameraParams, CameraManager.Instance.GameCamera.aspect);
+        Vector3 rayFwd = (intendedLocation.position - trackingPoint).normalized;
+        
+        
+        if (CantSeeAvatar(trackingPoint, rayFwd, desiredDistance, out RaycastHit hit)) {
+            desiredDistance = hit.distance;
+            
+            // If we previously could see the avatar then we know we are about to crash zoom and break the 30 degree rule.
+            // To lessen the impact a little, we can set the current distance of the camera to be a little closer to the hit
+            // collider than we would ordinarily allow. This way, by the time the distance smoothing occurs, we'll smooth into
+            // the cameras new distance from close to the obscuring object without passing through it. 
+            if (!_previouslyWasHidden ||  hit.collider != _currentObscuringCollider) {
+                _previouslyWasHidden = true;
+                _currentObscuringCollider = hit.collider;
+                
+                _cameraParams.distance = Mathf.Min(desiredDistance + _currentSettings.SphereCastRadius, _cameraParams.distance);
+            }
+        } else {
+            _previouslyWasHidden = false;
+            _currentObscuringCollider = hit.collider;
+        }
+        
+        _cameraParams.distance = _cameraParams.distance.ExponentialDecay(desiredDistance, generalSettings.DistanceDecay, Time.deltaTime);
+        
+        
         _location = CameraUtils.SetParams(FieldOfView(), in _cameraParams,  CameraManager.Instance.GameCamera.aspect);
     }
 

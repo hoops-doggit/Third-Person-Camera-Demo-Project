@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace DefaultNamespace {
     public static class MathUtils {
         public static int Wrap(int x, int min, int max) {
@@ -13,6 +15,12 @@ namespace DefaultNamespace {
                 x += max;
             }
             return x;
+        }
+
+        
+        public static float decayConstant = 16;
+        public static float ExponentialDecay(this float current, float target, float decay, float deltaTime) {
+            return target + (current - target) * Mathf.Exp(-decay * deltaTime);
         }
     }
 }

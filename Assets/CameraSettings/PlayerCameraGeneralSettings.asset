@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PlayerCameraGeneralSettings
   m_EditorClassIdentifier: 
   initialDistanceZone: 1
+  distanceDecayRate: 14.8
   maxPitch: 85.9
   minPitch: -58.3
   cameraSpeed: 0.203
