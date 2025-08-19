@@ -16,9 +16,8 @@ namespace DefaultNamespace {
             }
             return x;
         }
-
         
-        public static float decayConstant = 16;
+        // Check out Freya Holmer's video on interpolation over time
         public static float ExponentialDecay(this float current, float target, float decay, float deltaTime) {
             return target + (current - target) * Mathf.Exp(-decay * deltaTime);
         }

@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 public class PlayerCameraV2Debug : MonoBehaviour {
-    [SerializeField] private PlayerCameraV2 cam;
-    [SerializeField] private PlayerCameraGeneralSettings general;
-    [SerializeField] private PlayerCameraSettings settings;
+    [SerializeField] private ThirdPersonCamera cam;
+    [SerializeField] private ThirdPersonGeneralConfig general;
+    [SerializeField] private ThirdPersonSettingConfig settings;
 
     private void OnDrawGizmos() {
         CameraParams param = cam.CameraParams;

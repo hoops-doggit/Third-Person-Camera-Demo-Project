@@ -1,7 +1,8 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerCameraSettings", menuName = "Scriptable Objects/PlayerCameraSettings")]
-public class PlayerCameraSettings : ScriptableObject {
+public class ThirdPersonSettingConfig : ScriptableObject {
+    [SerializeField] private string displayName;
     [SerializeField] private float trackingHeight;
     [SerializeField] private float minDistance = 1;
     [Range(0,1)]

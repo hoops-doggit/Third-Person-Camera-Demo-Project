@@ -235,8 +235,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21717faebc210d4cbe6a79e0b84eb48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCamera: {fileID: 893289500446084645}
-  gameCamera: {fileID: 1917605484982597363}
   _invertDistanceLevel: 0
   _invertPitch: 0
 --- !u!114 &3867952500489627567
@@ -251,7 +249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b604081c77c574484257888d390dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 6418893372939406953}
   moveSpeed: 60
   drag: 8
   rb: {fileID: 2252295204024991046}
@@ -267,7 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74e0cf39a640f7b4e84ed398740f3c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generalSettings: {fileID: 11400000, guid: 44831feaa78fd844bbfda9472318e7ac, type: 2}
+  generalConfig: {fileID: 11400000, guid: 44831feaa78fd844bbfda9472318e7ac, type: 2}
   initialSettings: {fileID: 11400000, guid: 07de4f0ba41a1cc438175cb2c065cb34, type: 2}
   playerInput: {fileID: 6418893372939406953}
   transform: {fileID: 1560682779132795907}
@@ -289,7 +286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pc: {fileID: 893289500446084645}
   settings: {fileID: 11400000, guid: 07de4f0ba41a1cc438175cb2c065cb34, type: 2}
-  generalSettings: {fileID: 11400000, guid: 44831feaa78fd844bbfda9472318e7ac, type: 2}
+  generalConfig: {fileID: 0}
   t: {fileID: 1560682779132795907}
   distanceArcDivisions: 20
   material: {fileID: 0}

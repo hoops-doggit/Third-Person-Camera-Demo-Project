@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerCameraDebug : MonoBehaviour {
     [SerializeField] private PlayerCameraV1 pc;
-    [SerializeField] private PlayerCameraSettings settings;
-    [SerializeField] private PlayerCameraGeneralSettings generalSettings;
+    [SerializeField] private ThirdPersonSettingConfig settings;
+    [SerializeField] private ThirdPersonGeneralConfig generalConfig;
     [SerializeField] private Transform t;
     [SerializeField] private int distanceArcDivisions = 20;
     [SerializeField] private Material material;
@@ -22,7 +23,7 @@ public class PlayerCameraDebug : MonoBehaviour {
             return;
         }
 
-        if (settings == null || generalSettings == null) return;
+        if (settings == null || generalConfig == null) return;
 
         Gizmos.color = Color.cyan;
         Vector3 playerPosition = t.position;
@@ -30,12 +31,12 @@ public class PlayerCameraDebug : MonoBehaviour {
         Gizmos.DrawLine(playerPosition, _trackingPosition);
         DrawString("Tracking Position", _trackingPosition);
 
-        Vector3 maxPitchPosition = Quaternion.AngleAxis(generalSettings.MaxPitch, Vector3.right) * (Vector3.back * 3);
+        Vector3 maxPitchPosition = Quaternion.AngleAxis(generalConfig.MaxPitch, Vector3.right) * (Vector3.back * 3);
         maxPitchPosition += _trackingPosition;
         Gizmos.DrawLine(_trackingPosition, maxPitchPosition);
         DrawString("maxPitch", maxPitchPosition);
 
-        Vector3 minPitchPosition = Quaternion.AngleAxis(generalSettings.MinPitch, Vector3.right) * (Vector3.back * 3);
+        Vector3 minPitchPosition = Quaternion.AngleAxis(generalConfig.MinPitch, Vector3.right) * (Vector3.back * 3);
         minPitchPosition += _trackingPosition;
         Gizmos.DrawLine(_trackingPosition, minPitchPosition);
         DrawString("minPitch", minPitchPosition);
@@ -50,7 +51,7 @@ public class PlayerCameraDebug : MonoBehaviour {
             Distance2 = new Vector3[distanceArcDivisions];
             
             for (int i = 0; i < distanceArcDivisions; i++) {
-                float pitch = Mathf.Lerp(generalSettings.MinPitch, generalSettings.MaxPitch, (float)i / distanceArcDivisions);
+                float pitch = Mathf.Lerp(generalConfig.MinPitch, generalConfig.MaxPitch, (float)i / distanceArcDivisions);
                 float mult = settings.DistanceXPitchCurve.Evaluate(pitch);
                 Distance0[i] = Quaternion.AngleAxis(pitch, Vector3.right) * (Vector3.back * (distance0 * mult));
                 Distance1[i] = Quaternion.AngleAxis(pitch, Vector3.right) * (Vector3.back * (distance1 * mult));
@@ -60,8 +61,8 @@ public class PlayerCameraDebug : MonoBehaviour {
 
         Vector3 a, b;
         for (int i = 1; i < distanceArcDivisions; i++) {
-            float pitcha = Mathf.Lerp(generalSettings.MinPitch, generalSettings.MaxPitch, (float)(i-1) / distanceArcDivisions);
-            float pitchb = Mathf.Lerp(generalSettings.MinPitch, generalSettings.MaxPitch, (float)i / distanceArcDivisions);
+            float pitcha = Mathf.Lerp(generalConfig.MinPitch, generalConfig.MaxPitch, (float)(i-1) / distanceArcDivisions);
+            float pitchb = Mathf.Lerp(generalConfig.MinPitch, generalConfig.MaxPitch, (float)i / distanceArcDivisions);
             float aMult = settings.DistanceXPitchCurve.Evaluate(pitcha);
             float bMult = settings.DistanceXPitchCurve.Evaluate(pitchb);
             a = Quaternion.AngleAxis(pitcha, Vector3.right) * (Vector3.back * (distance0 * aMult));

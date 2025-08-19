@@ -2,14 +2,14 @@ using DefaultNamespace;
 using UnityEngine;
 
 public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
-    [SerializeField] private PlayerCameraGeneralSettings generalSettings;
-    [SerializeField] private PlayerCameraSettings initialSettings;
+    [SerializeField] private ThirdPersonGeneralConfig generalConfig;
+    [SerializeField] private ThirdPersonSettingConfig initialSettings;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private new Transform transform;
     [SerializeField] private MainCamera gameCamera;
     [SerializeField] private LayerMask obstacleLayerMask;
 
-    private PlayerCameraSettings _currentSettings;
+    private ThirdPersonSettingConfig _currentSettings;
     private PlayerCameraState _state;
 
     private Vector3 _desiredPosition;
@@ -105,10 +105,10 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
     }
 
     private Vector2 CalculatePitchYaw(float pitchDelta, float yawDelta) {
-        float pitch = pitchDelta * generalSettings.CameraSpeed + _state.Pitch;
-        pitch = Mathf.Clamp(pitch, generalSettings.MinPitch,generalSettings.MaxPitch);
+        float pitch = pitchDelta * generalConfig.CameraSpeed + _state.Pitch;
+        pitch = Mathf.Clamp(pitch, generalConfig.MinPitch,generalConfig.MaxPitch);
         // clamp pitch
-        float yaw = yawDelta * generalSettings.CameraSpeed + _state.Yaw;
+        float yaw = yawDelta * generalConfig.CameraSpeed + _state.Yaw;
         yaw = MathUtils.Wrap(yaw, 0f, 360f);
         // wrap yaw
         return new Vector2(x: pitch, y: yaw);
@@ -127,7 +127,7 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
             DistanceZone = distanceZone;
         }
         
-        public PlayerCameraState(PlayerCameraSettings settings) {
+        public PlayerCameraState(ThirdPersonSettingConfig settings) {
             //Distance = settings.MidDistance;
             DistanceZone = 1;
             Pitch = 0;

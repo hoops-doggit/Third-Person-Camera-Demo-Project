@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 
 namespace DefaultNamespace {
-    
+    [Serializable]
     public struct CameraParams {
         public Vector3 trackingPoint;    // 3D world position of the point camera orbits around
         public Vector2 framing;             // 2D screen position of the trackingPosition
@@ -28,7 +29,7 @@ namespace DefaultNamespace {
             camera.transform.SetPositionAndRotation(position, rotation);
         }
         
-        public static Location SetParams(float fov, in CameraParams camParams, float aspectRatio) {
+        public static Location LocationFromParams(float fov, in CameraParams camParams, float aspectRatio) {
             // compute "local" offset relative to our view rotation
             float tanFOVY = Mathf.Tan(0.5f * Mathf.Deg2Rad * fov);
             float tanFOVX = tanFOVY * aspectRatio;

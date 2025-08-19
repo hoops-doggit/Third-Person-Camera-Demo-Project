@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df63feff2068d5e4e834e4d9b47c4388, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generalSettings: {fileID: 11400000, guid: 44831feaa78fd844bbfda9472318e7ac, type: 2}
+  generalConfig: {fileID: 11400000, guid: 44831feaa78fd844bbfda9472318e7ac, type: 2}
   initialSettings: {fileID: 11400000, guid: 07de4f0ba41a1cc438175cb2c065cb34, type: 2}
   cameraObstacleMask:
     serializedVersion: 2

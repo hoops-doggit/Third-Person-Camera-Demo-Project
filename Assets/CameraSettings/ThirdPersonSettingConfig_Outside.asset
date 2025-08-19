@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3de60f7b8fef2f84db1baa427981bd57, type: 3}
-  m_Name: PlayerCameraSettings
+  m_Name: ThirdPersonSettingConfig_Outside
   m_EditorClassIdentifier: 
   trackingHeight: 2.68
   minDistance: 3
