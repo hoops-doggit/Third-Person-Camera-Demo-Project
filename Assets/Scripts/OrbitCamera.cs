@@ -1,27 +1,39 @@
 using DefaultNamespace;
 using UnityEngine;
 
-public class ThirdPersonCamera : MonoBehaviour, IVirtualCamera
+public class OrbitCamera : MonoBehaviour, IVirtualCamera
 {
-    [SerializeField] private ThirdPersonGeneralConfig generalConfig;
-    [SerializeField] private ThirdPersonSettingConfig initialSettings;
+    [SerializeField] private OrbitCameraGeneralConfig generalConfig;
+    [SerializeField] private OrbitCameraSettingsConfig initialSettings;
     [SerializeField] private LayerMask cameraObstacleMask;
     
-    private ThirdPersonSettingConfig _currentSettings;
+    private OrbitCameraSettingsConfig _currentSettings;
     private Transform _transform;
     private Location _location;
-    private float _fov;
     
     // * Persistant state
     private int _distanceZone = 1;   
     [SerializeField] // just so we can see it in editor
     private CameraParams _cameraParams;
     //
-    
+
+    // PointOFView
     public CameraParams CameraParams => _cameraParams;
     public Vector3 Position() => _location.position;
     public Quaternion Rotation() => _location.rotation;
-    public float FieldOfView() => _fov;
+    public float FieldOfView() => _currentSettings.FieldOfView * _currentSettings.FieldOfViewXPitchCurve.Evaluate(_cameraParams.pitch);
+    
+    
+    public delegate void OverrideCamTracking(ref CameraParams Cam, ref Vector3 InOutTrackingPoint);
+    public OverrideCamTracking OverrideTracking { get; set; }
+    public delegate void OverrideCamFraming(ref CameraParams Cam, ref Vector2 InOutFraming);
+    public OverrideCamFraming OverrideFraming { get; set; }
+    public delegate void OverrideCamPitch(ref CameraParams Cam, ref float InOutPitch);
+    public OverrideCamPitch OverridePitch { get; set; }
+    public delegate void OverrideCamYaw(ref CameraParams Cam, ref float InOutYaw);
+    public OverrideCamYaw OverrideYaw { get; set; }
+    public delegate void OverrideCamDist(ref CameraParams Cam, ref float InOutDist);
+    public OverrideCamDist OverrideDist { get; set; }
     
     private void Awake() {
         _transform = GetComponent<Transform>();
@@ -40,7 +52,6 @@ public class ThirdPersonCamera : MonoBehaviour, IVirtualCamera
         _cameraParams.pitch = 30f;
         _cameraParams.yaw = _transform.eulerAngles.y;
         _cameraParams.distance = DesiredDistance(_distanceZone);
-        _fov = _currentSettings.FieldOfView;
     }
     
     private void Start() {
@@ -77,6 +88,14 @@ public class ThirdPersonCamera : MonoBehaviour, IVirtualCamera
         Vector3 trackingPoint = _transform.position + Vector3.up * _currentSettings.TrackingHeight;
         
         Vector2 framing = new Vector2(initialSettings.XFraming, initialSettings.YFraming);
+
+        if (OverridePitch != null) {
+            OverridePitch(ref _cameraParams, ref desiredPitch);
+        }
+        
+        if (OverrideYaw != null) {
+            OverrideYaw(ref _cameraParams, ref desiredYaw);
+        }
         
         ApplyCameraValues(trackingPoint, desiredPitch, desiredYaw, desiredDistance, framing);
     }
@@ -124,6 +143,10 @@ public class ThirdPersonCamera : MonoBehaviour, IVirtualCamera
             return true;
         }
         return false;
+    }
+
+    private void OnDrawGizmosSelected() {
+        _cameraParams.trackingPoint = transform.position + Vector3.up * initialSettings.TrackingHeight;
     }
 
     private float DesiredPitch(float pitchDelta) {

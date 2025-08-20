@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerCameraGeneralSettings", menuName = "Scriptable Objects/PlayerCameraGeneralSettings")]
-public class ThirdPersonGeneralConfig : ScriptableObject {
+public class OrbitCameraGeneralConfig : ScriptableObject {
     [Range(0,30)]    
     [SerializeField] private float distanceDecayRate;
     [SerializeField] private float maxPitch;

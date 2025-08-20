@@ -21,5 +21,10 @@ namespace DefaultNamespace {
         public static float ExponentialDecay(this float current, float target, float decay, float deltaTime) {
             return target + (current - target) * Mathf.Exp(-decay * deltaTime);
         }
+
+        public static float Closest(float value, float min, float max) {
+            float midPoint = (min + max) * 0.5f;
+            return value < midPoint ? min : max;
+        }
     }
 }

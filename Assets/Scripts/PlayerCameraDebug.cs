@@ -4,8 +4,8 @@ using UnityEngine.Serialization;
 
 public class PlayerCameraDebug : MonoBehaviour {
     [SerializeField] private PlayerCameraV1 pc;
-    [SerializeField] private ThirdPersonSettingConfig settings;
-    [SerializeField] private ThirdPersonGeneralConfig generalConfig;
+    [SerializeField] private OrbitCameraSettingsConfig settings;
+    [SerializeField] private OrbitCameraGeneralConfig generalConfig;
     [SerializeField] private Transform t;
     [SerializeField] private int distanceArcDivisions = 20;
     [SerializeField] private Material material;

@@ -2,14 +2,14 @@ using DefaultNamespace;
 using UnityEngine;
 
 public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
-    [SerializeField] private ThirdPersonGeneralConfig generalConfig;
-    [SerializeField] private ThirdPersonSettingConfig initialSettings;
+    [SerializeField] private OrbitCameraGeneralConfig generalConfig;
+    [SerializeField] private OrbitCameraSettingsConfig initialSettings;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private new Transform transform;
     [SerializeField] private MainCamera gameCamera;
     [SerializeField] private LayerMask obstacleLayerMask;
 
-    private ThirdPersonSettingConfig _currentSettings;
+    private OrbitCameraSettingsConfig _currentSettings;
     private PlayerCameraState _state;
 
     private Vector3 _desiredPosition;
@@ -127,7 +127,7 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
             DistanceZone = distanceZone;
         }
         
-        public PlayerCameraState(ThirdPersonSettingConfig settings) {
+        public PlayerCameraState(OrbitCameraSettingsConfig settings) {
             //Distance = settings.MidDistance;
             DistanceZone = 1;
             Pitch = 0;

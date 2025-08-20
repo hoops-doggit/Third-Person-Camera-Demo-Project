@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerCameraSettings", menuName = "Scriptable Objects/PlayerCameraSettings")]
-public class ThirdPersonSettingConfig : ScriptableObject {
+public class OrbitCameraSettingsConfig : ScriptableObject {
     [SerializeField] private string displayName;
     [SerializeField] private float trackingHeight;
     [SerializeField] private float minDistance = 1;
@@ -11,6 +11,7 @@ public class ThirdPersonSettingConfig : ScriptableObject {
     [SerializeField] private float fieldOfView;
     [SerializeField] private float sphereCastRadius = .2f;
     [SerializeField] private AnimationCurve distanceXpitchCurve;
+    [SerializeField] private AnimationCurve fieldOfViewXpitchCurve;
     [Range(-1,1)]
     [SerializeField] private float xFraming, yFraming;
     
@@ -21,6 +22,7 @@ public class ThirdPersonSettingConfig : ScriptableObject {
     public float FieldOfView => fieldOfView;
     public float SphereCastRadius => sphereCastRadius;
     public AnimationCurve DistanceXPitchCurve => distanceXpitchCurve;
+    public AnimationCurve FieldOfViewXPitchCurve => fieldOfViewXpitchCurve;
     public float XFraming => xFraming;
     public float YFraming => yFraming;
 }

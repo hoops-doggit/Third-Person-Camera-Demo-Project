@@ -34,6 +34,7 @@ public class CameraManager : Singleton<CameraManager>
             return;
         }
         _virtualCamera.UpdateCamera();
+        
         _gameCameraTransform.SetPositionAndRotation(_virtualCamera.Position(), _virtualCamera.Rotation());
         _gameCamera.fieldOfView = _virtualCamera.FieldOfView();
     }
