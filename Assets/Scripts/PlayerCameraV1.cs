@@ -1,4 +1,4 @@
-using DefaultNamespace;
+using ThisNamespace;
 using UnityEngine;
 
 public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
@@ -18,6 +18,7 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
     private Vector3 _inputThisFrame;
     private bool _canDistanceZoom;
 
+    public string Name { get; }
     public Vector3 Position() => _desiredPosition;
     public Quaternion Rotation() => _desiredRotation;
     public float FieldOfView() => _desiredFov;
@@ -74,6 +75,15 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
         }
 
         ApplyCameraValues(trackingPoint, desiredRotation, desiredDistance, pitchYaw);
+    }
+
+    public int Priority { get; set; }
+    public void Activate(PreviousCameraInfo info) {
+        //
+    }
+
+    public void Deactivate() {
+        //
     }
 
     private bool CantSeeAvatar(Vector3 trackingPoint, Vector3 rayForward, float desiredDistance, out RaycastHit hit) {

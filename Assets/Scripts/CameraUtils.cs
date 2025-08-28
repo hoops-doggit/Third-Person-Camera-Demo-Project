@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     [Serializable]
     public struct CameraParams {
         public Vector3 trackingPoint;    // 3D world position of the point camera orbits around

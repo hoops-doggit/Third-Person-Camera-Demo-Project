@@ -938,7 +938,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 8fd629e9778acb94a90903cbcb1c7a68, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8182,6 +8182,7 @@ MonoBehaviour:
   yawHints:
   - {fileID: 62125660}
   - {fileID: 347291912}
+  begunHint: 0
 --- !u!4 &2040570374
 Transform:
   m_ObjectHideFlags: 0
@@ -8224,6 +8225,66 @@ PrefabInstance:
     - target: {fileID: 91419979338234166, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
       propertyPath: m_Name
       value: Manager Stuff
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _controlMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _invertPitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[0].time
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[2].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[0].value
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[2].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].inWeight
+      value: 0.5996173
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].outWeight
+      value: 0.60049427
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].weightedMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8746717634086127990, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8278,9 +8339,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 996645850871941529, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1753070739879010893, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.88
+      value: -2.23
       objectReference: {fileID: 0}
     - target: {fileID: 1753070739879010893, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -8318,21 +8383,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2541499853680133543, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
-      propertyPath: m_Height
-      value: 3.32
-      objectReference: {fileID: 0}
-    - target: {fileID: 2541499853680133543, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
-      propertyPath: m_Center.y
-      value: 1.63
-      objectReference: {fileID: 0}
     - target: {fileID: 4917033487408183633, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: m_Name
       value: Player V2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7077007042226886397, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
-      propertyPath: _cameraParams.framing.x
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

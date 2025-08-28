@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     public static class VectorUtils {
         public static Vector3 XcY(this Vector2 v2, float c = 0f) {
             return new Vector3(v2.x, 0, v2.y);

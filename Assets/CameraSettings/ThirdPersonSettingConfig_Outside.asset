@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de60f7b8fef2f84db1baa427981bd57, type: 3}
   m_Name: ThirdPersonSettingConfig_Outside
   m_EditorClassIdentifier: 
-  displayName: 
+  displayName: Outside Settings
   trackingHeight: 2.68
   minDistance: 3
   midDistance: 0.396
@@ -25,38 +25,38 @@ MonoBehaviour:
     - serializedVersion: 3
       time: -90
       value: 0.1
-      inSlope: -0.0015603403
-      outSlope: -0.0015603403
+      inSlope: 0.000799815
+      outSlope: 0.000799815
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.7246622
+      outWeight: 0.2384873
     - serializedVersion: 3
-      time: -30.737593
-      value: 0.53107536
-      inSlope: 0.014086512
-      outSlope: 0.014086512
+      time: -28.87093
+      value: 0.41754642
+      inSlope: 0.014736957
+      outSlope: 0.014736957
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.45156014
+      outWeight: 0.28426406
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.010405647
-      outSlope: 0.010405647
-      tangentMode: 34
+      inSlope: 0.01370613
+      outSlope: 0.01370613
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.24488822
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 1.5
-      inSlope: -0.002036445
-      outSlope: -0.002036445
+      inSlope: -0.00032318145
+      outSlope: -0.00032318145
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.7119839
+      inWeight: 0.13575754
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -67,21 +67,21 @@ MonoBehaviour:
     - serializedVersion: 3
       time: -101.4
       value: 1.5311012
-      inSlope: -0.010297473
-      outSlope: -0.010297473
+      inSlope: -0.000054310334
+      outSlope: -0.000054310334
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.05325445
+      outWeight: 0.1897247
     - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      time: -4.253333
+      value: 1.3193614
+      inSlope: -0.0035385531
+      outSlope: -0.0035385531
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.42666665
+      outWeight: 0.1365776
     - serializedVersion: 3
       time: 90
       value: 1.2

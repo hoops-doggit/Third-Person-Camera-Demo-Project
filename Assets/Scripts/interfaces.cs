@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     public interface IOrbitCameraHint {
         void OverrideCamTracking(ref CameraParams Cam, ref Vector3 InOutTrackingPoint);
         void OverrideCamFraming(ref CameraParams Cam, ref Vector2 InOutFraming);

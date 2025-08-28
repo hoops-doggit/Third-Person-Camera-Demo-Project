@@ -1,10 +1,29 @@
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     public interface IVirtualCamera {
+        public string Name { get; }
         public Vector3 Position();
         public Quaternion Rotation();
         public float FieldOfView();
         public void UpdateCamera();
+        int Priority { get; set; }
+        public void Activate(PreviousCameraInfo info);
+        public void Deactivate();
+    }
+
+    public class PreviousCameraInfo {
+        public string Name;
+        public Vector3 Position;
+        public Quaternion Rotation;
+        public float FieldOfView;
+        public bool PlayerCameraShouldMatch;
+
+        public PreviousCameraInfo(IVirtualCamera camera) {
+            Name = camera.Name;
+            Position = camera.Position();
+            Rotation = camera.Rotation();
+            FieldOfView = camera.FieldOfView();
+        }
     }
 }

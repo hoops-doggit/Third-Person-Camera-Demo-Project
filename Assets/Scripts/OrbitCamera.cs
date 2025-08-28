@@ -1,4 +1,4 @@
-using DefaultNamespace;
+using ThisNamespace;
 using UnityEngine;
 
 public class OrbitCamera : MonoBehaviour, IVirtualCamera
@@ -6,9 +6,10 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
     [SerializeField] private OrbitCameraGeneralConfig generalConfig;
     [SerializeField] private OrbitCameraSettingsConfig initialSettings;
     [SerializeField] private LayerMask cameraObstacleMask;
+    [SerializeField] private PlayerMovement movement;
     
     private OrbitCameraSettingsConfig _currentSettings;
-    private Transform _transform;
+    [SerializeField] private Transform _transform;
     private Location _location;
     
     // * Persistant state
@@ -19,24 +20,24 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
 
     // PointOFView
     public CameraParams CameraParams => _cameraParams;
+    public string Name => "PlayerCamera"; 
     public Vector3 Position() => _location.position;
     public Quaternion Rotation() => _location.rotation;
     public float FieldOfView() => _currentSettings.FieldOfView * _currentSettings.FieldOfViewXPitchCurve.Evaluate(_cameraParams.pitch);
     
     
-    public delegate void OverrideCamTracking(ref CameraParams Cam, ref Vector3 InOutTrackingPoint);
-    public OverrideCamTracking OverrideTracking { get; set; }
-    public delegate void OverrideCamFraming(ref CameraParams Cam, ref Vector2 InOutFraming);
-    public OverrideCamFraming OverrideFraming { get; set; }
-    public delegate void OverrideCamPitch(ref CameraParams Cam, ref float InOutPitch);
-    public OverrideCamPitch OverridePitch { get; set; }
-    public delegate void OverrideCamYaw(ref CameraParams Cam, ref float InOutYaw);
-    public OverrideCamYaw OverrideYaw { get; set; }
-    public delegate void OverrideCamDist(ref CameraParams Cam, ref float InOutDist);
-    public OverrideCamDist OverrideDist { get; set; }
+    public delegate void OverrideCameraTracking(ref CameraParams Cam, ref Vector3 InOutTrackingPoint);
+    public OverrideCameraTracking OverrideTracking { get; set; }
+    public delegate void OverrideCameraFraming(ref CameraParams Cam, ref Vector2 InOutFraming);
+    public OverrideCameraFraming OverrideFraming { get; set; }
+    public delegate void OverrideCameraPitch(ref CameraParams Cam, ref float InOutPitch);
+    public OverrideCameraPitch OverridePitch { get; set; }
+    public delegate void OverrideCameraYaw(ref CameraParams Cam, ref float InOutYaw);
+    public OverrideCameraYaw OverrideYaw { get; set; }
+    public delegate void OverrideCameraDist(ref CameraParams Cam, ref float InOutDist);
+    public OverrideCameraDist OverrideDist { get; set; }
     
     private void Awake() {
-        _transform = GetComponent<Transform>();
         _currentSettings = initialSettings;
 
         // if( save data exists )
@@ -60,14 +61,23 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         }
     }
 
+    public void Activate(PreviousCameraInfo info) {
+        if (info.PlayerCameraShouldMatch) {
+            _cameraParams.pitch = info.Rotation.eulerAngles.x;
+            _cameraParams.yaw = info.Rotation.eulerAngles.y;
+        }
+    }
+    
+    public void Deactivate() {}
+
     // Variables for storing this frame's input.
     private float _pitchInput;
     private float _yawInput;
     private int _distanceInput;
     private bool _canDistanceZoom = true;
     private void UpdateInput(Vector2 look, int distanceDelta) {
-        _pitchInput = look.y;
         _yawInput = look.x;
+        _pitchInput = look.y;
         _distanceInput = distanceDelta;
         // if mouse scroll clamp, if gamepad button press then loop
         if (_distanceInput != 0 && _canDistanceZoom) {
@@ -85,7 +95,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         float desiredYaw = DesiredYaw(_yawInput);
         float desiredDistance = DesiredDistance(_distanceZone);
 
-        Vector3 trackingPoint = _transform.position + Vector3.up * _currentSettings.TrackingHeight;
+        Vector3 trackingPoint = DesiredTrackingPoint();
         
         Vector2 framing = new Vector2(initialSettings.XFraming, initialSettings.YFraming);
 
@@ -100,7 +110,16 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         ApplyCameraValues(trackingPoint, desiredPitch, desiredYaw, desiredDistance, framing);
     }
 
-    
+    public int Priority { get; set; }
+
+    private Vector3 DesiredTrackingPoint() {
+        if (movement.Grounded) {
+            
+        }
+        return _transform.position + Vector3.up * _currentSettings.TrackingHeight;
+    }
+
+
     private bool _previouslyWasHidden = false;
     private Collider _currentObscuringCollider;
     

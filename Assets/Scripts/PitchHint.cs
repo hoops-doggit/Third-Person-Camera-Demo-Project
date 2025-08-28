@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     public class PitchHint : MonoBehaviour {
         [SerializeField] private Vector2 desiredPitchRange;
         [SerializeField] private float decayRate;

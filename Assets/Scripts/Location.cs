@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     public struct Location {
         public Vector3 position;
         public Quaternion rotation;

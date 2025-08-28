@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     public class YawHint : MonoBehaviour {
         [SerializeField] private float desiredYaw;
         [SerializeField] private float decayRate = 2;

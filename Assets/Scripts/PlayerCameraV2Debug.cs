@@ -1,5 +1,4 @@
-using System;
-using DefaultNamespace;
+using ThisNamespace;
 using UnityEngine;
 
 public class PlayerCameraV2Debug : MonoBehaviour {

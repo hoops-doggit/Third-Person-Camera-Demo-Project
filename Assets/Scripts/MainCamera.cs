@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     public class MainCamera : Singleton<MainCamera> {
         [SerializeField] private new Transform transform;
 

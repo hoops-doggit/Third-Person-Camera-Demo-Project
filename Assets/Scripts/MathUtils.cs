@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace ThisNamespace {
     public static class MathUtils {
         public static int Wrap(int x, int min, int max) {
             return (x < min) ? min : (x > max) ? max : x;

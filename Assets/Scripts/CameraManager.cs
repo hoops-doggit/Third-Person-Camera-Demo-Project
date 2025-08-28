@@ -1,12 +1,15 @@
-using DefaultNamespace;
+using System.Collections.Generic;
+using ThisNamespace;
 using UnityEngine;
 
 public class CameraManager : Singleton<CameraManager>
 {
     [SerializeField] Camera _gameCamera = null;
     private Transform _gameCameraTransform = null;
-    private IVirtualCamera _virtualCamera;
-    bool _haveCamera = false;
+    private IVirtualCamera _activeCamera;
+    
+    HashSet<IVirtualCamera> _activeCameras = new HashSet<IVirtualCamera>();
+    private PreviousCameraInfo _previousCameraInfo = null;
     
     public Camera GameCamera => _gameCamera;
 
@@ -16,26 +19,41 @@ public class CameraManager : Singleton<CameraManager>
     }
 
     public void AddCamera(IVirtualCamera virtualCamera) {
-        if (virtualCamera != null) {
-            _virtualCamera = virtualCamera;
-            _haveCamera = true;
+        if (virtualCamera == null) {
+            return;
         }
+        _activeCameras.Add(virtualCamera);
     }
 
     public void RemoveCamera(IVirtualCamera virtualCamera) {
-        if (_virtualCamera == virtualCamera) {
-            _virtualCamera = null;
-            _haveCamera = false;
+        if (_activeCamera == virtualCamera) {
+            _activeCamera = null;
         }
     }
 
-    private void LateUpdate() {
-        if (!_haveCamera) {
-            return;
+    private IVirtualCamera GetHighestPriorityCamera() {
+        IVirtualCamera highestPriorityCamera = null;
+        int highestPriorityCameraIndex = -1;
+        foreach (IVirtualCamera camera in _activeCameras) {
+            if (camera.Priority > highestPriorityCameraIndex) {
+                highestPriorityCamera = camera;
+                highestPriorityCameraIndex = camera.Priority;
+            }
         }
-        _virtualCamera.UpdateCamera();
+
+        return highestPriorityCamera;
+    }
+
+    private void LateUpdate() {
+        IVirtualCamera currentHighestPriorityCamera = GetHighestPriorityCamera();
+        if (_activeCamera != currentHighestPriorityCamera) {
+            if (_activeCamera != null) {
+                _activeCamera.Deactivate();
+            }
+        }
+        _activeCamera.UpdateCamera();
         
-        _gameCameraTransform.SetPositionAndRotation(_virtualCamera.Position(), _virtualCamera.Rotation());
-        _gameCamera.fieldOfView = _virtualCamera.FieldOfView();
+        _gameCameraTransform.SetPositionAndRotation(_activeCamera.Position(), _activeCamera.Rotation());
+        _gameCamera.fieldOfView = _activeCamera.FieldOfView();
     }
 }
