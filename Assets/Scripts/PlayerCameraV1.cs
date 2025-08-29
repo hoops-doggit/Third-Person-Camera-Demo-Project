@@ -86,6 +86,10 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
         //
     }
 
+    public void Disable() {
+        //
+    }
+
     private bool CantSeeAvatar(Vector3 trackingPoint, Vector3 rayForward, float desiredDistance, out RaycastHit hit) {
         Ray ray = new Ray(trackingPoint, rayForward);
         return Physics.SphereCast(ray, _currentSettings.SphereCastRadius, out hit, desiredDistance, obstacleLayerMask, QueryTriggerInteraction.Ignore);

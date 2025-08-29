@@ -26,5 +26,12 @@ namespace ThisNamespace {
             float midPoint = (min + max) * 0.5f;
             return value < midPoint ? min : max;
         }
+        
+        public static float SafeDivide(float numerator, float denominator) {
+            if (denominator == 0) {
+                return 0;
+            }
+            return numerator/denominator;
+        }
     }
 }

@@ -67,8 +67,10 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
             _cameraParams.yaw = info.Rotation.eulerAngles.y;
         }
     }
-    
-    public void Deactivate() {}
+
+    public void Deactivate() {
+        //
+    }
 
     // Variables for storing this frame's input.
     private float _pitchInput;

@@ -8,8 +8,8 @@ namespace ThisNamespace {
         public float FieldOfView();
         public void UpdateCamera();
         int Priority { get; set; }
-        public void Activate(PreviousCameraInfo info);
-        public void Deactivate();
+        void Activate(PreviousCameraInfo info);
+        void Deactivate();
     }
 
     public class PreviousCameraInfo {
