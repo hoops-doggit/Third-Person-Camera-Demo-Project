@@ -86,6 +86,9 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
         //
     }
 
+    private bool _Active;
+    public bool Active => _Active;
+
     public void Disable() {
         //
     }

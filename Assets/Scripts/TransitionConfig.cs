@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace ThisNamespace {
+    [CreateAssetMenu(fileName = "TransitionConfig", menuName = "Scriptable Objects/Transition Config")]
     public class TransitionConfig : ScriptableObject {
         public TransitionInfo[] transitions;
 

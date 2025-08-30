@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using ThisNamespace;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class CameraManager : Singleton<CameraManager>
 {
@@ -10,8 +9,8 @@ public class CameraManager : Singleton<CameraManager>
     private Transform _gameCameraTransform = null;
     private IVirtualCamera _activeCamera;
     
-    HashSet<IVirtualCamera> _activeCameras = new HashSet<IVirtualCamera>();
-    private PreviousCameraInfo _previousCameraInfo = null;
+    private readonly HashSet<IVirtualCamera> _activeCameras = new HashSet<IVirtualCamera>();
+    private PreviousCameraInfo _previousCameraInfo = new();
     
     public Camera GameCamera => gameCamera;
 

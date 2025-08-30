@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1820ed55e7aac234392edf3435aad0c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameCamera: {fileID: 7339320039335796366}
+  gameCamera: {fileID: 7339320039335796366}
+  transitionConfig: {fileID: 11400000, guid: 34086d61ba8f6134292a71e645f86cd7, type: 2}
 --- !u!114 &5822434522482835663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,9 +60,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21717faebc210d4cbe6a79e0b84eb48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameCamera: {fileID: 7339320039335796366}
   _invertDistanceLevel: 0
   _invertPitch: 0
+  _invertYaw: 0
+  _lookInputResponseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _controlMode: 0
 --- !u!1 &1597399142083496961
 GameObject:
   m_ObjectHideFlags: 0

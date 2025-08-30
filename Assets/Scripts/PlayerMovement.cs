@@ -1,5 +1,4 @@
 using ThisNamespace;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
@@ -13,10 +12,11 @@ public class PlayerMovement : MonoBehaviour {
     private bool _grounded = true;
     public bool Grounded => _grounded;
     private Vector3 _groundPosition;
-    public Vector3 GroundPosition => _groundPosition;
     
     private PlayerInput _playerInput;
     private Vector3 _velocity;
+    public Vector3 GroundPosition => _groundPosition;
+    public Vector3 Velocity => _velocity;
     
     private Transform _t;
 
@@ -30,8 +30,16 @@ public class PlayerMovement : MonoBehaviour {
 
     private void Update() {
         if (_playerInput.Move.sqrMagnitude > 0.0001f) {
-            Vector3 dir = new Vector3(_playerInput.Move.x, 0f, _playerInput.Move.y).normalized;
-            _velocity = dir * moveSpeed;
+            Vector3 inputDir = new Vector3(_playerInput.Move.x, 0f, _playerInput.Move.y).normalized;
+            Vector3 movementDir = inputDir;
+            if (_velocity.sqrMagnitude > 0.1f ){
+                Vector3 currentDir = _velocity.normalized;
+                float inputDotMovement = Vector3.Dot(movementDir, currentDir);
+                if(inputDotMovement > -0.5){
+                    movementDir = Vector3.RotateTowards(currentDir, inputDir, rotationSpeed * Time.deltaTime, 0f);
+                }
+            }
+            _velocity = movementDir * moveSpeed;
         } else {
             if (_velocity.magnitude < 0.01f) {
                 _velocity = Vector3.zero;

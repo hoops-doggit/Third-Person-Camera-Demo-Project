@@ -978,7 +978,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -8284,6 +8284,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5822434522482835663, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
       propertyPath: _lookInputResponseCurve.m_Curve.Array.data[1].weightedMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7339320039335796366, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8746717634086127990, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
