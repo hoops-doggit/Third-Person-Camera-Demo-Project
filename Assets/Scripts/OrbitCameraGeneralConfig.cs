@@ -13,10 +13,9 @@ public class OrbitCameraGeneralConfig : ScriptableObject {
     [SerializeField] private float yawGravityVelocityThreshold;
     [Tooltip("Delay (in seconds) after no input received before we allow yaw gravity to take effect")]
     [SerializeField] private float yawGravityDelay;
-    [Range(0.01f, 1f)] 
-    [SerializeField] private float yawGravityAcceleration;
-    [Range(0.01f,40f)]
-    [SerializeField] private float yawGravityDeceleration;
+    [SerializeField] private float yawGravityFrequency;
+    [SerializeField] private float yawGravityDamping;
+    [SerializeField] private float yawGravityResponse;
     [SerializeField] private float yawGravityStrength;
     [SerializeField] private float yawGravityDeadZone;
     
@@ -27,8 +26,9 @@ public class OrbitCameraGeneralConfig : ScriptableObject {
     
     public float YawGravityVelocityThreshold => yawGravityVelocityThreshold;
     public float YawGravityDelay => yawGravityDelay;
-    public float YawGravityAcceleration => yawGravityAcceleration;
-    public float YawGravityDeceleration => yawGravityDeceleration;
+    public float YawGravityFrequency => yawGravityFrequency;
+    public float YawGravityDamping => yawGravityDamping;
+    public float YawGravityResponse => yawGravityResponse;
     public float YawGravityStrength => yawGravityStrength;
     public float YawGravityDeadZone => yawGravityDeadZone;
 }

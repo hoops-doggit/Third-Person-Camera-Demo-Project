@@ -241,6 +241,10 @@ MonoBehaviour:
     distance: 0
     pitch: 0
     yaw: 0
+  yawGravityStrength: 0
+  f: 0
+  z: 0
+  r: 0
 --- !u!114 &3288631400454174506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,6 +270,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1753070739879010893}
+  - component: {fileID: 305099957978787674}
   - component: {fileID: 5429816656306100887}
   - component: {fileID: 5307549256052493673}
   - component: {fileID: 2541499853680133543}
@@ -293,6 +298,19 @@ Transform:
   - {fileID: 1271665704887621804}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &305099957978787674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4917033487408183633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b492c93868f94e7cb790e29a7006d355, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orbitCamera: {fileID: 578960244123679711}
 --- !u!114 &5429816656306100887
 MonoBehaviour:
   m_ObjectHideFlags: 0

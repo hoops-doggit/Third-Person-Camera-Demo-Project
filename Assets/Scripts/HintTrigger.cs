@@ -1,25 +1,30 @@
+using DefaultNamespace;
 using UnityEngine;
 
 namespace ThisNamespace {
     public class HintTrigger : MonoBehaviour {
         [SerializeField] private PitchHint pitchHint = null;
         [SerializeField] private YawHint[] yawHints = null;
-        // Serialized for debug visibility
-        [SerializeField] private bool begunHint = false;
         
         private OrbitCamera _orbitCamera = null;
         private bool _beenActivated = false;
         
         private void OnTriggerEnter(Collider other) {
-            if (other.TryGetComponent(out OrbitCamera cam)) {
-                _beenActivated = false;
-                _orbitCamera = cam;
-                if (PlayerInput.Instance.Look.magnitude != 0) {
-                    return;
-                }
-                ActivateHint();
-                _beenActivated = true;
+            if (!other.TryGetComponent(out ComponentHub hub)) {
+               return;
             }
+
+            if (hub.OrbitCamera == null) {
+                return;
+            }
+            
+            _beenActivated = false;
+            _orbitCamera = hub.OrbitCamera;
+            if (PlayerInput.Instance.Look.sqrMagnitude > 0.25f * 0.25f) {
+                return;
+            }
+            ActivateHint();
+            _beenActivated = true;
         }
 
         private void ActivateHint() {
@@ -29,7 +34,7 @@ namespace ThisNamespace {
                 
             Vector3 playerPos = _orbitCamera.transform.position;
             if (yawHints != null) {
-                YawHint closest = GetClosestYawhint(playerPos);
+                YawHint closest = GetClosestYawHint(playerPos);
                 _orbitCamera.OverrideYaw += closest.OverrideYaw;
             }
         }
@@ -42,8 +47,10 @@ namespace ThisNamespace {
         }
 
         private void OnTriggerExit(Collider other) {
-            if (other.TryGetComponent(out OrbitCamera cam)) {
-                Deactivate(cam);
+            if (other.TryGetComponent(out ComponentHub hub)) {
+                if (hub.OrbitCamera != null && hub.OrbitCamera == _orbitCamera) {
+                    Deactivate(_orbitCamera);
+                }
             }
         }
 
@@ -60,7 +67,7 @@ namespace ThisNamespace {
         }
 
 
-        private YawHint GetClosestYawhint(Vector3 playerPos) {
+        private YawHint GetClosestYawHint(Vector3 playerPos) {
             float closestDistance = float.MaxValue;
             YawHint closest = null;
             foreach (var hint in yawHints) {

@@ -94,5 +94,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  xFraming: -0.3
+  xFraming: 0
   yFraming: 0

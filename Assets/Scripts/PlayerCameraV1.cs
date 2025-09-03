@@ -4,9 +4,7 @@ using UnityEngine;
 public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
     [SerializeField] private OrbitCameraGeneralConfig generalConfig;
     [SerializeField] private OrbitCameraSettingsConfig initialSettings;
-    [SerializeField] private PlayerInput playerInput;
     [SerializeField] private new Transform transform;
-    [SerializeField] private MainCamera gameCamera;
     [SerializeField] private LayerMask obstacleLayerMask;
 
     private OrbitCameraSettingsConfig _currentSettings;
@@ -21,7 +19,7 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
     public string Name { get; }
     public Vector3 Position() => _desiredPosition;
     public Quaternion Rotation() => _desiredRotation;
-    public float FieldOfView() => _desiredFov;
+    public float FieldOfView() => _currentSettings.FieldOfView * _currentSettings.FieldOfViewXPitchCurve.Evaluate(_desiredRotation.eulerAngles.x);
 
     private void Awake() {
         transform = GetComponent<Transform>();
@@ -37,7 +35,7 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
     }
 
     private void Update() {
-        UpdateInput(playerInput.Look, playerInput.CameraDistanceToggle);
+        UpdateInput(PlayerInput.Instance.Look, PlayerInput.Instance.CameraDistanceToggle);
         UpdateCamera();
     }
 
@@ -107,7 +105,8 @@ public class PlayerCameraV1 : MonoBehaviour, IVirtualCamera {
 
         desiredPosition += trackingPoint;
 
-        gameCamera.SetPositionAndRotation(desiredPosition, desiredRotation);
+        _desiredPosition = desiredPosition;
+        _desiredRotation = desiredRotation;
     }
 
     public float DesiredDistance(int distanceZone) {

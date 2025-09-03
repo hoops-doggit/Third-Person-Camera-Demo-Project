@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99ec4eebe752d29489214e15ab8b123f, type: 3}
   m_Name: ThirdPersonGeneralSettings
   m_EditorClassIdentifier: 
-  distanceDecayRate: 14.8
+  distanceDecayRate: 30
   maxPitch: 85.9
   minPitch: -58.3
   cameraSpeed: 0.203
   yawGravityVelocityThreshold: 0.1
   yawGravityDelay: 1
-  yawGravityAcceleration: 0.402
-  yawGravityDeceleration: 4
-  yawGravityStrength: 2
+  yawGravityFrequency: 0.7
+  yawGravityDamping: 1
+  yawGravityResponse: 0
+  yawGravityStrength: 0.4
   yawGravityDeadZone: 10
