@@ -16,10 +16,15 @@ MonoBehaviour:
   maxPitch: 85.9
   minPitch: -58.3
   cameraSpeed: 0.203
+  gravityDelay: 2
   yawGravityVelocityThreshold: 0.1
-  yawGravityDelay: 1
   yawGravityFrequency: 0.7
   yawGravityDamping: 1
   yawGravityResponse: 0
-  yawGravityStrength: 0.4
+  yawGravityStrength: 0.5
   yawGravityDeadZone: 10
+  pitchGravityDelay: 0
+  pitchGravityFrequency: 0.7
+  pitchGravityDamping: 1
+  pitchGravityResponse: 0
+  pitchGravityStrength: 0

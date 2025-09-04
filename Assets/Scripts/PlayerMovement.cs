@@ -32,13 +32,13 @@ public class PlayerMovement : MonoBehaviour {
         if (_playerInput.Move.sqrMagnitude > 0.0001f) {
             Vector3 inputDir = new Vector3(_playerInput.Move.x, 0f, _playerInput.Move.y).normalized;
             Vector3 movementDir = inputDir;
-            if (_velocity.sqrMagnitude > 0.1f ){
-                Vector3 currentDir = _velocity.normalized;
-                float inputDotMovement = Vector3.Dot(movementDir, currentDir);
-                if(inputDotMovement > -0.5){
-                    movementDir = Vector3.RotateTowards(currentDir, inputDir, rotationSpeed * Time.deltaTime, 0f);
-                }
-            }
+            // if (_velocity.sqrMagnitude > 0.1f ){
+            //     Vector3 currentDir = _velocity.normalized;
+            //     float inputDotMovement = Vector3.Dot(movementDir, currentDir);
+            //     if(inputDotMovement > -0.5){
+            //         movementDir = Vector3.RotateTowards(currentDir, inputDir, rotationSpeed * Time.deltaTime, 0f);
+            //     }
+            // }
             _velocity = movementDir * moveSpeed;
         } else {
             if (_velocity.magnitude < 0.01f) {

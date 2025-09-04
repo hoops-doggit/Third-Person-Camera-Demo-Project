@@ -33,5 +33,25 @@ namespace ThisNamespace {
             }
             return numerator/denominator;
         }
+        
+
+        /// This assumes the magnitude of the two vectors that you want to calculate the cross product from are both unit vectors
+        public static float CrossProductMagnitudeFromAngle(float angleInDegrees)
+        {
+            // Convert angle from degrees to radians
+            float angleInRadians = angleInDegrees * Mathf.Deg2Rad;
+        
+            // Calculate the sine of the angle
+            return Mathf.Sin(angleInRadians);
+        }
+        
+        public static float DotProductMagnitudeFromAngle(float angleInDegrees)
+        {
+            // Convert angle from degrees to radians
+            float angleInRadians = angleInDegrees * Mathf.Deg2Rad;
+        
+            // Calculate the cosine of the angle
+            return Mathf.Cos(angleInRadians);
+        }
     }
 }
