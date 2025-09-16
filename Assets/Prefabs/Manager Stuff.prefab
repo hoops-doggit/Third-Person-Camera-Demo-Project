@@ -61,11 +61,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _invertDistanceLevel: 0
-  _invertPitch: 0
+  _invertPitch: 1
   _invertYaw: 0
   _lookInputResponseCurve:
     serializedVersion: 2
     m_Curve:
+    - serializedVersion: 3
+      time: -1
+      value: -1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 0
       value: 0
@@ -73,8 +82,8 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.5996173
+      outWeight: 0.60049427
     - serializedVersion: 3
       time: 1
       value: 1
@@ -153,11 +162,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  near clip plane: 0.01
+  far clip plane: 5000
+  field of view: 40
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2

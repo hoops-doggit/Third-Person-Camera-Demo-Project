@@ -6,15 +6,10 @@ namespace ThisNamespace {
             return (x < min) ? min : (x > max) ? max : x;
         }
         
-        public static float Wrap(float x, float min, float max) {
-            if (x > max) {
-                x -= max;
-            }
-
-            else if (x < min) {
-                x += max;
-            }
-            return x;
+        public static float Wrap(this float x, float min, float max)
+        {
+            float range = max - min;
+            return ((x - min) % range + range) % range + min;
         }
         
         // Check out Freya Holmer's video on interpolation over time

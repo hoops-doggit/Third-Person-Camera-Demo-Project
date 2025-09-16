@@ -11,6 +11,8 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
     [SerializeField] private LayerMask cameraObstacleMask;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private PlayerMovement movement;
+    [AngularSpringDrawer]
+    [SerializeField] private AngularSpring yawSpring;
     
     private OrbitCameraSettingsConfig _currentSettings;
     [FormerlySerializedAs("_transform")] [SerializeField] private Transform playerTransform;
@@ -59,6 +61,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         _cameraParams.pitch = 30f;
         _cameraParams.yaw = playerTransform.eulerAngles.y;
         _cameraParams.distance = DesiredDistance(_distanceZone, _cameraParams.pitch);
+        _prevPos = playerTransform.position;
     }
     
     private void Start() {
@@ -94,6 +97,19 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         } else if (distanceDelta == 0) {
             _canDistanceZoom = true;
         }
+
+        float inputThreshold = 0.01f;
+        // Is camera input above threshold?
+        if (look.SqrMagnitude() < inputThreshold * inputThreshold) {
+            // Has input been consistently above threshold or was input bumped? 
+            if (!_inputReleased) {
+                _timeInputReleased = Time.time;
+                _inputReleased = true;
+            }
+        } else {
+            _inputReleased = false;
+        }
+
     }
 
     private bool _inputReleased = false;
@@ -108,27 +124,16 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         float desiredYaw = DesiredYaw(_yawInput);
 
         
-        // Is camera input above threshold?
-        if (Mathf.Abs(_pitchInput + _yawInput + _distanceInput) < 0.01f) {
-            // Has input been consistently above threshold or was input bumped? 
-            if (!_inputReleased) {
-                _timeInputReleased = Time.time;
-                _inputReleased = true;
-            }
-        } else {
-            _inputReleased = false;
-        }
-
         bool cameraInputElapsed = false;
         if (_inputReleased) {
             cameraInputElapsed = Time.time - _timeInputReleased > generalConfig.GravityDelay;
         }
 
         if (/* Player has enabled Camera Auto Adjust setting */ true) {
-            desiredYaw = YawGravity(movement.Velocity, desiredYaw, cameraInputElapsed);
+            desiredYaw = YawGravity(movement.Velocity, PlayerInput.Instance.MoveRaw, desiredYaw, cameraInputElapsed);
         }
         
-        desiredPitch = PitchGravity(desiredPitch, cameraInputElapsed);
+        //desiredPitch = PitchGravity(desiredPitch, cameraInputElapsed);
         
         float desiredDistance = DesiredDistance(_distanceZone, desiredPitch); 
 
@@ -145,60 +150,65 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         }
         
         
-        
         ApplyCameraValues(trackingPoint, desiredPitch, desiredYaw, desiredDistance, framing);
     }
-
-    private float _yawGravity = 0;
-    private Vector3 _smoothedMovementVelocity = Vector3.zero;
-    float _f0,_z0,_r0;
-    private SecondOrderDynamicsFloat _yawSpring;
     
-    private float YawGravity(Vector3 movementVelocity, float currentYaw, bool cameraInputElapsed) {
-        // this allows us to reconstruct the spring 
-        if (_yawSpring == null || Math.Abs(generalConfig.YawGravityFrequency + generalConfig.YawGravityDamping + generalConfig.YawGravityResponse - (_f0 + _z0 + _r0)) > 0.001f) {
-            ResetYawSpring();
-        }
-        
-        bool movingFasterThanInputThreshold = PlayerInput.Instance.Move.magnitude > 0.5f;
-        
-        _smoothedMovementVelocity = Vector3.RotateTowards(_smoothedMovementVelocity.normalized, movementVelocity.normalized, 0.1f, 1);
-        float targetAngle = _smoothedMovementVelocity.YawDeg360();
-        
-        float targetNormalized = Mathf.Repeat(targetAngle + 180, 360) - 180;
-        float currentNormalized = Mathf.Repeat(currentYaw + 180, 360) - 180;
-        float diff = Mathf.DeltaAngle(currentNormalized, targetNormalized);
-        bool diffIsstrongerThanDeadZone = Mathf.Abs(diff) > generalConfig.YawGravityDeadZone;
-
-        bool movingFastEnough = movementVelocity.magnitude > generalConfig.YawGravityVelocityThreshold;
-        
-        bool yawGravityEnabled = movingFasterThanInputThreshold && cameraInputElapsed && diffIsstrongerThanDeadZone && movingFastEnough;
-        
-        float desiredYaw = currentYaw;
-        if (yawGravityEnabled) {
-            float sign = Mathf.Sign(diff);
-            float cross = MathUtils.DotProductMagnitudeFromAngle(diff);
-            float t = Mathf.InverseLerp(1, -1, cross);
-            float diffMultiplier = Mathf.Lerp(1, 2, t);
+    private float YawGravity(Vector3 movementVelocity, Vector2 rawMoveInput, float currentYaw, bool cameraInputElapsed) {
+        if (cameraInputElapsed) {
+            // We do want to rotate the camera towards the angle representing the direction of player movement
+            float targetAngle = movementVelocity.YawDeg360();
             
-            _yawGravity = _yawSpring.Update(Time.deltaTime, (generalConfig.YawGravityStrength * sign) * diffMultiplier).Value;
-            desiredYaw +=  _yawGravity ;
-        } else {
-            if (Mathf.Abs(_yawGravity) > 0.01f) {
-                _yawGravity = _yawSpring.Update(Time.deltaTime, 0).Value;
-                desiredYaw +=  _yawGravity;
-            } else {
-                _yawGravity = 0;
-            }
+            bool movingFastEnough = movementVelocity.magnitude > generalConfig.YawGravityVelocityThreshold;
+
+            float normalizedAngle = Mathf.Atan2(rawMoveInput.y, rawMoveInput.x) * Mathf.Rad2Deg - 90;
+            float inputAngle = normalizedAngle.Wrap(0,360);
+            Debug.Log("input angle " + inputAngle);
+            bool inputOutsideDeadZone = IsOutsideDeadZone(inputAngle);
+            
+            bool yawGravityEnabled = movingFastEnough && inputOutsideDeadZone;
+            return yawSpring.Update(targetAngle, Time.deltaTime, yawGravityEnabled);
         }
-        return desiredYaw;
+
+        yawSpring.CurrentAngle = currentYaw;
+        
+        return yawSpring.Update(currentYaw, Time.deltaTime, true);
     }
 
-    private void ResetYawSpring() {
-        _f0 = generalConfig.YawGravityFrequency;
-        _z0 = generalConfig.YawGravityDamping;
-        _r0 = generalConfig.YawGravityResponse;
-        _yawSpring = new SecondOrderDynamicsFloat(generalConfig.YawGravityFrequency,generalConfig.YawGravityDamping,generalConfig.YawGravityResponse,_yawGravity);
+    private bool IsOutsideDeadZone(float inputAngle) {
+        if (inputAngle < generalConfig.YawGravityFrontDeadZone &&
+            inputAngle > 360 - generalConfig.YawGravityFrontDeadZone) {
+            return false;
+        }
+
+        if (inputAngle > generalConfig.YawGravityBackDeadZone &&
+            inputAngle < 360 - generalConfig.YawGravityBackDeadZone) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private float YawGravity1(Vector3 movementVelocity, Vector2 rawMoveInput, float currentYaw, bool cameraInputElapsed) {
+        bool movingFastEnough = movementVelocity.magnitude > generalConfig.YawGravityVelocityThreshold;
+        
+        // returns between -180 and 180 - Atan2 = Four Quadrant Arc Tangent
+        float normalizedTarget = Mathf.Atan2(movementVelocity.x, movementVelocity.z) * Mathf.Rad2Deg;
+        
+        // brings back to within 0 to 360
+        float targetAngle = normalizedTarget < 0 ? normalizedTarget + 360 : normalizedTarget;
+
+        // Same again but for movement input
+        float normalizedInputAngle = Mathf.Atan2(rawMoveInput.y, rawMoveInput.x) * Mathf.Rad2Deg;
+        float inputAngle = normalizedInputAngle < 0 ? normalizedInputAngle + 360 : normalizedInputAngle;
+        
+        bool inputOutsideDeadZone = inputAngle > generalConfig.YawGravityFrontDeadZone && inputAngle < generalConfig.YawGravityBackDeadZone;
+        
+        // Should yaw gravity currently even be enabled? 
+        // If we don't want it and it previously was moving then it should smoothly interpolate velocity to 0
+        bool yawGravityEnabled = movingFastEnough && inputOutsideDeadZone;
+
+        return 0;//next slide;
     }
 
 
@@ -217,20 +227,24 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         }
         
         Vector3 groundNormalWithoutYaw = new Vector3(groundNormal.x, 0, groundNormal.z).normalized;
-
+        
+        float slope = Vector3.Angle(Vector3.up, hit.normal);
         // Determine the direction (clockwise or counterclockwise)
-        Vector3 crossProduct = Vector3.Cross(Vector3.up, groundNormalWithoutYaw);
+        Vector3 cross = Vector3.Cross(Vector3.up, groundNormalWithoutYaw);
+        float sign = cross.z > 0 ? 1 : -1;
 
-        float sign = crossProduct.z > 0 ? -1 : 1;
-            
+        float minPitch = _currentSettings.MinMaxPreferredPitch.x + slope * sign;
+        float maxPitch = _currentSettings.MinMaxPreferredPitch.y + slope * sign;
+        
+        Debug.Log("Current pitch = " + desiredPitch + ", min: " + minPitch + ", max: " + maxPitch);
+
         if (cameraInputElapsed) {
-            _pitchGravity = _pitchSpring.Update(Time.deltaTime, (generalConfig.PitchGravityStrength * sign)).Value;
-            desiredPitch += _pitchGravity;
-        } else {
-            _pitchGravity = _pitchSpring.Update(Time.deltaTime, 0).Value;
-            desiredPitch += _pitchGravity;
+            if (_cameraParams.pitch > maxPitch) {
+                desiredPitch = _cameraParams.pitch.ExponentialDecay(maxPitch, generalConfig.PitchGravityStrength, Time.deltaTime);
+            } else if (_cameraParams.pitch < minPitch) {
+                desiredPitch = _cameraParams.pitch.ExponentialDecay(minPitch, generalConfig.PitchGravityStrength, Time.deltaTime);
+            }
         }
-        Debug.Log("pitch gravity : " + _pitchGravity);
 
         return desiredPitch;
     }
@@ -244,12 +258,19 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
 
 
     public int Priority { get; set; }
-
-    private Vector3 DesiredTrackingPoint() {
+    private Vector3 _prevPos;
+    public Vector3 DesiredTrackingPoint() {
         if (movement.Grounded) {
             // do jump stuff here
         }
-        return playerTransform.position + Vector3.up * _currentSettings.TrackingHeight;
+        Vector3 curPos = playerTransform.position;
+        Vector3 position = new(
+            _prevPos.x.ExponentialDecay(curPos.x, 16, Time.deltaTime),
+            _prevPos.y.ExponentialDecay(curPos.y + _currentSettings.TrackingHeight, 16, Time.deltaTime),
+            _prevPos.z.ExponentialDecay(curPos.z, 16, Time.deltaTime)
+        );
+        _prevPos = position;
+        return position;
     }
     
     private bool _previouslyWasHidden = false;
@@ -301,7 +322,11 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
 
     private float DesiredPitch(float pitchDelta) {
         float pitch = pitchDelta * generalConfig.CameraSpeed + _cameraParams.pitch;
-        pitch = Mathf.Clamp(pitch, generalConfig.MinPitch,generalConfig.MaxPitch);
+        if (pitch > generalConfig.MaxPitch) {
+            pitch = pitch.ExponentialDecay(generalConfig.MaxPitch, generalConfig.PitchGravityStrength, Time.deltaTime);
+        } else if (pitch < generalConfig.MinPitch) {
+            pitch = pitch.ExponentialDecay(generalConfig.MinPitch, generalConfig.PitchGravityStrength, Time.deltaTime);
+        }
         return pitch;
     }
 

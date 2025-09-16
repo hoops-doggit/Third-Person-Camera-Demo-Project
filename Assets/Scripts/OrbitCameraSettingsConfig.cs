@@ -14,6 +14,9 @@ public class OrbitCameraSettingsConfig : ScriptableObject {
     [SerializeField] private AnimationCurve fieldOfViewXpitchCurve;
     [Range(-1,1)]
     [SerializeField] private float xFraming, yFraming;
+
+    [Header("Preferred Ranges")] 
+    [SerializeField] private Vector2 minMaxPreferredPitch;
     
     public float TrackingHeight => trackingHeight;
     public float MinDistance => minDistance;
@@ -25,4 +28,5 @@ public class OrbitCameraSettingsConfig : ScriptableObject {
     public AnimationCurve FieldOfViewXPitchCurve => fieldOfViewXpitchCurve;
     public float XFraming => xFraming;
     public float YFraming => yFraming;
+    public Vector2 MinMaxPreferredPitch => minMaxPreferredPitch;
 }

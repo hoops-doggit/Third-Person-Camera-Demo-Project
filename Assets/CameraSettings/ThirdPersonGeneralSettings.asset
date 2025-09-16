@@ -13,18 +13,53 @@ MonoBehaviour:
   m_Name: ThirdPersonGeneralSettings
   m_EditorClassIdentifier: 
   distanceDecayRate: 30
-  maxPitch: 85.9
-  minPitch: -58.3
+  maxPitch: 80
+  minPitch: -30
   cameraSpeed: 0.203
   gravityDelay: 2
-  yawGravityVelocityThreshold: 0.1
-  yawGravityFrequency: 0.7
+  yawGravityVelocityThreshold: 0.07
+  yawGravityFrequency: 0.75
   yawGravityDamping: 1
-  yawGravityResponse: 0
+  yawGravityResponse: 1
   yawGravityStrength: 0.5
-  yawGravityDeadZone: 10
+  yawGravityMinMaxStrength: {x: 0.2, y: 1.2}
+  yawGravityFrontDeadZone: 10
+  yawGravityBackDeadZone: 25
+  yawGravityCrossSampler:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -1
+      value: 1
+      inSlope: 0.0064429026
+      outSlope: 0.0064429026
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.23407412
+    - serializedVersion: 3
+      time: 0
+      value: 0.2
+      inSlope: -0.0037696958
+      outSlope: -0.0037696958
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.5
+      inSlope: 0.019764824
+      outSlope: 0.019764824
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.30518514
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   pitchGravityDelay: 0
-  pitchGravityFrequency: 0.7
+  pitchGravityFrequency: 5
   pitchGravityDamping: 1
-  pitchGravityResponse: 0
-  pitchGravityStrength: 0
+  pitchGravityResponse: 1
+  pitchGravityStrength: 10

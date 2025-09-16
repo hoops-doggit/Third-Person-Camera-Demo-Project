@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ThirdPersonSettingConfig_Outside
   m_EditorClassIdentifier: 
   displayName: Outside Settings
-  trackingHeight: 2.68
+  trackingHeight: 2.6
   minDistance: 3
   midDistance: 0.396
   maxDistance: 9
@@ -65,7 +65,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -101.4
+      time: -90
       value: 1.5311012
       inSlope: -0.000054310334
       outSlope: -0.000054310334
@@ -74,14 +74,14 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.1897247
     - serializedVersion: 3
-      time: -4.253333
+      time: 0
       value: 1.3193614
-      inSlope: -0.0035385531
-      outSlope: -0.0035385531
+      inSlope: -0.0025388708
+      outSlope: -0.0025388708
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.1365776
+      outWeight: 0.22038695
     - serializedVersion: 3
       time: 90
       value: 1.2
@@ -94,5 +94,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  xFraming: 0
-  yFraming: 0
+  xFraming: -0.76
+  yFraming: 0.56
+  minMaxPreferredPitch: {x: 20, y: 30}

@@ -1,0 +1,17 @@
+Need:
+code that moves camera out of objects when penetration occurs
+
+
+Pitch gravity 
+
+Terrain to test on
+
+Later
+Remove IVirtualCamera.Active if I don't use it.
+Make orbit camera go to posiiton of desired start pos
+Make it possible to iterate on values at editor time - m
+
+Ideas
+Orbit camera that has a custom tracking point or! we use a hint to orbit another object.
+
+

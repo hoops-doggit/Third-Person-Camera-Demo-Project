@@ -2,7 +2,7 @@ using ThisNamespace;
 using UnityEngine;
 
 public class PlayerInput : Singleton<PlayerInput> {
-    private Vector2 _move;
+    private Vector2 _move, _moveRaw;
     private Vector2 _look;
     private int _cameraDistanceLevel;
     
@@ -10,7 +10,8 @@ public class PlayerInput : Singleton<PlayerInput> {
     [SerializeField] private AnimationCurve _lookInputResponseCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     [SerializeField] private ControlMode _controlMode;
     
-    public Vector2 Move => _move;
+    public Vector2 MoveRaw => _moveRaw; // raw movement input
+    public Vector2 Move => _move; // world space movement direction
     public Vector2 Look => _look;
     public int CameraDistanceToggle => _cameraDistanceLevel;
     private InputSystem_Actions _actions;
@@ -23,8 +24,8 @@ public class PlayerInput : Singleton<PlayerInput> {
     }
 
     void Update() {
-        Vector2 rawMovement = _actions.Player.Move.ReadValue<Vector2>();
-        _move = TransformInputToCameraRelative(rawMovement, CameraManager.Instance.GameCamera.transform);
+        _moveRaw = _actions.Player.Move.ReadValue<Vector2>();
+        _move = TransformInputToCameraRelative(_moveRaw, CameraManager.Instance.GameCamera.transform);
         
         Vector2 rawLook = _actions.Player.Look.ReadValue<Vector2>();
         rawLook.x = _invertYaw ? -rawLook.x : rawLook.x;

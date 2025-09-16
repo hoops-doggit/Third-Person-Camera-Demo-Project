@@ -233,14 +233,46 @@ MonoBehaviour:
   cameraObstacleMask:
     serializedVersion: 2
     m_Bits: 55
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1
   movement: {fileID: 5429816656306100887}
-  _transform: {fileID: 1753070739879010893}
+  yawSpring:
+    m_Frequency: 0.3
+    m_DampingRatio: 1
+    m_Response: 1.55
+    m_DecelerationRate: 5
+    m_ResponseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  playerTransform: {fileID: 1753070739879010893}
   _cameraParams:
     trackingPoint: {x: -2.23, y: 2.68, z: 0}
     framing: {x: 0, y: 0}
-    distance: 0
-    pitch: 0
-    yaw: 0
+    distance: 48.8
+    pitch: 7
+    yaw: 5.51
 --- !u!114 &3288631400454174506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +289,7 @@ MonoBehaviour:
   general: {fileID: 11400000, guid: 44831feaa78fd844bbfda9472318e7ac, type: 2}
   settings: {fileID: 11400000, guid: 07de4f0ba41a1cc438175cb2c065cb34, type: 2}
   distanceArcDivisions: 20
+  playerRoot: {fileID: 1753070739879010893}
 --- !u!1 &4917033487408183633
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,6 +356,8 @@ MonoBehaviour:
   drag: 4
   rotationSpeed: 5
   rb: {fileID: 5307549256052493673}
+  cc: {fileID: 0}
+  of: {fileID: 0}
   groundedCheckRadius: 0.2
   groundCheckLayer:
     serializedVersion: 2
@@ -351,9 +386,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_Constraints: 112
-  m_CollisionDetection: 2
+  m_CollisionDetection: 1
 --- !u!136 &2541499853680133543
 CapsuleCollider:
   m_ObjectHideFlags: 0

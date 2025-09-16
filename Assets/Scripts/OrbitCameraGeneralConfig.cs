@@ -20,7 +20,10 @@ public class OrbitCameraGeneralConfig : ScriptableObject {
     [SerializeField] private float yawGravityDamping;
     [SerializeField] private float yawGravityResponse;
     [SerializeField] private float yawGravityStrength;
-    [SerializeField] private float yawGravityDeadZone;
+    [SerializeField] private Vector2 yawGravityMinMaxStrength;
+    [SerializeField] private float yawGravityFrontDeadZone;
+    [SerializeField] private float yawGravityBackDeadZone;
+    [SerializeField] private AnimationCurve yawGravityCrossSampler;
 
     [Header("Pitch Gravity")] 
     [SerializeField] private float pitchGravityDelay;
@@ -40,7 +43,10 @@ public class OrbitCameraGeneralConfig : ScriptableObject {
     public float YawGravityDamping => yawGravityDamping;
     public float YawGravityResponse => yawGravityResponse;
     public float YawGravityStrength => yawGravityStrength;
-    public float YawGravityDeadZone => yawGravityDeadZone;
+    public Vector2 YawGravityMinMaxStrength => yawGravityMinMaxStrength;
+    public float YawGravityFrontDeadZone => yawGravityFrontDeadZone;
+    public float YawGravityBackDeadZone => yawGravityBackDeadZone;
+    public AnimationCurve YawGravityCrossSampler => yawGravityCrossSampler;
     
     public float PitchGravityFrequency =>pitchGravityFrequency;
     public float PitchGravityDamping =>pitchGravityDamping;
