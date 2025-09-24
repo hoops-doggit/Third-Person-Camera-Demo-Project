@@ -2,10 +2,10 @@ using System;
 using SODynamics;
 using ThisNamespace;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class OrbitCamera : MonoBehaviour, IVirtualCamera
 {
+    [SerializeField] private PlayerHub playerHub;
     [SerializeField] private OrbitCameraGeneralConfig generalConfig;
     [SerializeField] private OrbitCameraSettingsConfig initialSettings;
     [SerializeField] private LayerMask cameraObstacleMask;
@@ -15,7 +15,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
     [SerializeField] private AngularSpring yawSpring;
     
     private OrbitCameraSettingsConfig _currentSettings;
-    [FormerlySerializedAs("_transform")] [SerializeField] private Transform playerTransform;
+    private Transform playerT;
     private Location _location;
     private bool _Active;
     
@@ -47,6 +47,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
     
     private void Awake() {
         _currentSettings = initialSettings;
+        playerT = playerHub.transform;
 
         // if( save data exists )
         // Init From Save File(saveData)
@@ -59,9 +60,8 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         _distanceZone = 1;
         _cameraParams = new CameraParams();
         _cameraParams.pitch = 30f;
-        _cameraParams.yaw = playerTransform.eulerAngles.y;
+        _cameraParams.yaw = playerT.eulerAngles.y;
         _cameraParams.distance = DesiredDistance(_distanceZone, _cameraParams.pitch);
-        _prevPos = playerTransform.position;
     }
     
     private void Start() {
@@ -86,6 +86,9 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
     private float _yawInput;
     private int _distanceInput;
     private bool _canDistanceZoom = true;
+    
+    private bool _inputReleased = false;
+    private float _timeInputReleased = 0;
     private void UpdateInput(Vector2 look, int distanceDelta) {
         _yawInput = look.x;
         _pitchInput = look.y;
@@ -100,7 +103,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
 
         float inputThreshold = 0.01f;
         // Is camera input above threshold?
-        if (look.SqrMagnitude() < inputThreshold * inputThreshold) {
+        if (look.magnitude < inputThreshold) {
             // Has input been consistently above threshold or was input bumped? 
             if (!_inputReleased) {
                 _timeInputReleased = Time.time;
@@ -109,11 +112,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         } else {
             _inputReleased = false;
         }
-
     }
-
-    private bool _inputReleased = false;
-    private float _timeInputReleased = 0;
     
     public void UpdateCamera() {
         // For ease of use I'm calling this here, but there may be a case for you to sample input at the beginning 
@@ -123,6 +122,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         float desiredPitch = DesiredPitch(_pitchInput);
         float desiredYaw = DesiredYaw(_yawInput);
 
+        //desiredYaw = _cameraParams.yaw.ExponentialDecayAngle(desiredYaw, generalConfig.YawDecay, Time.deltaTime);
         
         bool cameraInputElapsed = false;
         if (_inputReleased) {
@@ -139,7 +139,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
 
         Vector3 trackingPoint = DesiredTrackingPoint();
         
-        Vector2 framing = new Vector2(initialSettings.XFraming, initialSettings.YFraming);
+        Vector2 framing = DesiredFraming(desiredPitch);
 
         if (OverridePitch != null) {
             OverridePitch(ref _cameraParams, ref desiredPitch);
@@ -149,29 +149,58 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
             OverrideYaw(ref _cameraParams, ref desiredYaw);
         }
         
+        if (OverrideDist != null) {
+            OverrideDist(ref _cameraParams, ref desiredDistance);
+        }
+        
         
         ApplyCameraValues(trackingPoint, desiredPitch, desiredYaw, desiredDistance, framing);
     }
     
-    private float YawGravity(Vector3 movementVelocity, Vector2 rawMoveInput, float currentYaw, bool cameraInputElapsed) {
-        if (cameraInputElapsed) {
-            // We do want to rotate the camera towards the angle representing the direction of player movement
-            float targetAngle = movementVelocity.YawDeg360();
-            
-            bool movingFastEnough = movementVelocity.magnitude > generalConfig.YawGravityVelocityThreshold;
+    public Vector3 DesiredTrackingPoint() {
+        if (movement.Grounded) {
+            // do jump stuff here
+        }
+        
+        return playerHub.Rigidbody.position + Vector3.up * _currentSettings.TrackingHeight;
+    }
 
-            float normalizedAngle = Mathf.Atan2(rawMoveInput.y, rawMoveInput.x) * Mathf.Rad2Deg - 90;
-            float inputAngle = normalizedAngle.Wrap(0,360);
-            Debug.Log("input angle " + inputAngle);
-            bool inputOutsideDeadZone = IsOutsideDeadZone(inputAngle);
-            
-            bool yawGravityEnabled = movingFastEnough && inputOutsideDeadZone;
-            return yawSpring.Update(targetAngle, Time.deltaTime, yawGravityEnabled);
+    private Vector2 DesiredFraming(float pitch) {
+        float desiredY = initialSettings.YFraming;
+        if (pitch < 0) {
+            float t = Mathf.InverseLerp(0, generalConfig.MinPitch, pitch);
+            t = generalConfig.YFramingXPitch.Evaluate(t);
+            desiredY = Mathf.Lerp(initialSettings.YFraming, initialSettings.YFramingAtMaxPitch, t);
         }
 
-        yawSpring.CurrentAngle = currentYaw;
+        float desiredX = initialSettings.XFraming;
+        float startPitchCutoff = 15;
+        if (pitch > startPitchCutoff) {
+            float t = Mathf.InverseLerp(startPitchCutoff, generalConfig.MaxPitch, pitch);
+            t = generalConfig.XFramingXPitch.Evaluate(t);
+            desiredX = Mathf.Lerp(initialSettings.XFraming,0, t);
+        }
         
-        return yawSpring.Update(currentYaw, Time.deltaTime, true);
+        return new Vector2(_cameraParams.framing.x.ExponentialDecay(desiredX, 16, Time.deltaTime), desiredY);
+    }
+
+    private float YawGravity(Vector3 movementVelocity, Vector2 rawMoveInput, float currentYaw, bool cameraInputElapsed) {
+        if (cameraInputElapsed) {
+            bool inputStrongEnough = rawMoveInput.magnitude > generalConfig.YawGravityVelocityThreshold;
+
+            float inputNormalizedAngle = Mathf.Atan2(rawMoveInput.x, rawMoveInput.y) * Mathf.Rad2Deg;
+            float inputAngle = inputNormalizedAngle.Wrap(0,360);
+            bool inputOutsideDeadZone = IsOutsideDeadZone(inputAngle);
+
+            float normalizedAngle = Mathf.Atan2(movementVelocity.x, movementVelocity.z) * Mathf.Rad2Deg;
+            float targetAngle = normalizedAngle.Wrap(0,360);
+            
+            bool yawGravityEnabled = inputStrongEnough && inputOutsideDeadZone;
+            return yawSpring.Update(targetAngle, Time.deltaTime, yawGravityEnabled);
+        }
+        
+        yawSpring.Reset(currentYaw);
+        return currentYaw;
     }
 
     private bool IsOutsideDeadZone(float inputAngle) {
@@ -222,7 +251,7 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         }
 
         Vector3 groundNormal = Vector3.up;
-        if (Physics.Raycast(playerTransform.position + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, 5, groundMask, QueryTriggerInteraction.Ignore)) {
+        if (Physics.Raycast(playerT.position + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, 5, groundMask, QueryTriggerInteraction.Ignore)) {
             groundNormal = hit.normal;
         }
         
@@ -256,26 +285,11 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         _pitchSpring = new SecondOrderDynamicsFloat(generalConfig.PitchGravityFrequency,generalConfig.PitchGravityDamping,generalConfig.PitchGravityResponse,_pitchGravity);
     }
 
-
+    [SerializeField] private float trackingPointSmoothing = 20;
     public int Priority { get; set; }
-    private Vector3 _prevPos;
-    public Vector3 DesiredTrackingPoint() {
-        if (movement.Grounded) {
-            // do jump stuff here
-        }
-        Vector3 curPos = playerTransform.position;
-        Vector3 position = new(
-            _prevPos.x.ExponentialDecay(curPos.x, 16, Time.deltaTime),
-            _prevPos.y.ExponentialDecay(curPos.y + _currentSettings.TrackingHeight, 16, Time.deltaTime),
-            _prevPos.z.ExponentialDecay(curPos.z, 16, Time.deltaTime)
-        );
-        _prevPos = position;
-        return position;
-    }
     
     private bool _previouslyWasHidden = false;
     private Collider _currentObscuringCollider;
-
 
     private void ApplyCameraValues(Vector3 trackingPoint, float desiredPitch, float desiredYaw, float desiredDistance, Vector2 framing) {
         _cameraParams.trackingPoint = trackingPoint;
@@ -298,40 +312,40 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
                 
                 _cameraParams.distance = Mathf.Min(desiredDistance + _currentSettings.SphereCastRadius, _cameraParams.distance);
             }
+
+            if (desiredDistance < _cameraParams.distance) {
+                _cameraParams.distance = _cameraParams.distance.ExponentialDecay(desiredDistance, generalConfig.DistanceDecay, Time.deltaTime);
+            } else {
+                _cameraParams.distance = desiredDistance;
+            }
         } else {
             _previouslyWasHidden = false;
             _currentObscuringCollider = hit.collider;
+            _cameraParams.distance = _cameraParams.distance.ExponentialDecay(desiredDistance, generalConfig.DistanceDecay, Time.deltaTime);
         }
-        
-        _cameraParams.distance = _cameraParams.distance.ExponentialDecay(desiredDistance, generalConfig.DistanceDecay, Time.deltaTime);
         
         _location = CameraUtils.LocationFromParams(FieldOfView(), in _cameraParams,  CameraManager.Instance.GameCamera.aspect);
     }
-
-    private bool CantSeeAvatar(Vector3 trackingPoint, Vector3 rayForward, float desiredDistance, out RaycastHit hit) {
-        Ray ray = new Ray(trackingPoint, rayForward);
-        if (Physics.SphereCast(ray, initialSettings.SphereCastRadius, out hit, desiredDistance, cameraObstacleMask, QueryTriggerInteraction.Ignore)) {
-            return true;
-        }
-        return false;
-    }
-
-    private void OnDrawGizmosSelected() {
-        _cameraParams.trackingPoint = transform.position + Vector3.up * initialSettings.TrackingHeight;
-    }
-
+    
     private float DesiredPitch(float pitchDelta) {
-        float pitch = pitchDelta * generalConfig.CameraSpeed + _cameraParams.pitch;
-        if (pitch > generalConfig.MaxPitch) {
-            pitch = pitch.ExponentialDecay(generalConfig.MaxPitch, generalConfig.PitchGravityStrength, Time.deltaTime);
-        } else if (pitch < generalConfig.MinPitch) {
-            pitch = pitch.ExponentialDecay(generalConfig.MinPitch, generalConfig.PitchGravityStrength, Time.deltaTime);
+        float pitch = pitchDelta * generalConfig.CameraSpeed * Time.deltaTime; 
+        pitch += _cameraParams.pitch;
+        if(true){
+            if (pitch > generalConfig.MaxPitch) {
+                pitch = pitch.ExponentialDecay(generalConfig.MaxPitch, generalConfig.PitchGravityStrength, Time.deltaTime);
+            } else if (pitch < generalConfig.MinPitch) {
+                pitch = pitch.ExponentialDecay(generalConfig.MinPitch, generalConfig.PitchGravityStrength, Time.deltaTime);
+            }
+        } else {
+            pitch = Mathf.Clamp(pitch, generalConfig.MinPitch, generalConfig.MaxPitch);
         }
+        
         return pitch;
     }
 
     private float DesiredYaw(float yawDelta) {
-        float yaw = yawDelta * generalConfig.CameraSpeed + _cameraParams.yaw;
+        float yaw = yawDelta * generalConfig.CameraSpeed * Time.deltaTime;
+        yaw += _cameraParams.yaw;
         yaw = MathUtils.Wrap(yaw, 0f, 360f);
         return yaw;
     }
@@ -345,4 +359,69 @@ public class OrbitCamera : MonoBehaviour, IVirtualCamera
         }
         return distance * _currentSettings.DistanceXPitchCurve.Evaluate(pitch);;
     }
+    
+    private bool CantSeeAvatar(Vector3 trackingPoint, Vector3 rayForward, float desiredDistance, out RaycastHit hit) {
+        Ray ray = new Ray(trackingPoint, rayForward);
+        if (Physics.SphereCast(ray, initialSettings.SphereCastRadius, out hit, desiredDistance, cameraObstacleMask, QueryTriggerInteraction.Ignore)) {
+            return true;
+        }
+        return false;
+    }
+    
+    private bool CantSeeAvatarBogus(Vector3 trackingPoint, Vector3 rayForward, float desiredDistance, out RaycastHit hit)
+    {
+        Vector3 camPos = _location.position;
+        Quaternion camRot = _location.rotation;
+
+        float near = CameraManager.Instance.GameCamera.nearClipPlane;
+        float fov = FieldOfView() * Mathf.Deg2Rad;
+        float aspect = CameraManager.Instance.GameCamera.aspect;
+
+        float halfHeight = Mathf.Tan(fov * 0.5f) * near;
+        float halfWidth = halfHeight * aspect;
+
+        Vector3 right = camRot * Vector3.right;
+        Vector3 up = camRot * Vector3.up;
+
+        // Framing offset applied to near-plane center
+        Vector3 nearCenter = camPos + rayForward * near
+                                    + right * (_cameraParams.framing.x * halfWidth)
+                                    + up * (_cameraParams.framing.y * halfHeight);
+
+        // Near-plane corners
+        Vector3[] corners =
+        {
+            nearCenter + up * halfHeight + right * halfWidth,
+            nearCenter + up * halfHeight - right * halfWidth,
+            nearCenter - up * halfHeight + right * halfWidth,
+            nearCenter - up * halfHeight - right * halfWidth
+        };
+
+        // Check visibility to each corner
+        foreach (var corner in corners)
+        {
+            Vector3 dir = (corner - trackingPoint).normalized;
+            float dist = Vector3.Distance(trackingPoint, corner);
+
+            if (Physics.SphereCast(new Ray(trackingPoint, dir),
+                    initialSettings.SphereCastRadius,
+                    out hit,
+                    Mathf.Min(dist, desiredDistance),
+                    cameraObstacleMask,
+                    QueryTriggerInteraction.Ignore))
+            {
+                return true;
+            }
+        }
+
+        hit = default;
+        return false;
+    }
+    
+    
+    
+    private void OnDrawGizmosSelected() {
+        _cameraParams.trackingPoint = transform.position + Vector3.up * initialSettings.TrackingHeight;
+    }
+
 }

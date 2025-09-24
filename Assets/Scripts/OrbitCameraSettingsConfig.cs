@@ -29,4 +29,5 @@ public class OrbitCameraSettingsConfig : ScriptableObject {
     public float XFraming => xFraming;
     public float YFraming => yFraming;
     public Vector2 MinMaxPreferredPitch => minMaxPreferredPitch;
+    public float YFramingAtMaxPitch { get; set; }
 }

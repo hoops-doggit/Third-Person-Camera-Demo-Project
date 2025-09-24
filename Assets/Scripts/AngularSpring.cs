@@ -85,4 +85,9 @@ public class AngularSpring
         m_DampingRatio = Mathf.Clamp01(damping);
         m_Response = Mathf.Max(0f, response);
     }
+
+    public void Reset(float currentAngle) {
+        _currentAngle = currentAngle;
+        _currentVelocity = 0;
+    }
 }

@@ -5,12 +5,17 @@ namespace ThisNamespace {
     public class HintTrigger : MonoBehaviour {
         [SerializeField] private PitchHint pitchHint = null;
         [SerializeField] private YawHint[] yawHints = null;
+        [SerializeField] private DistanceHint distHint = null;
         
         private OrbitCamera _orbitCamera = null;
         private bool _beenActivated = false;
         
         private void OnTriggerEnter(Collider other) {
-            if (!other.TryGetComponent(out ComponentHub hub)) {
+            if (!other.CompareTag("Player")) {
+                return;
+            }
+            
+            if (!other.TryGetComponent(out PlayerHub hub)) {
                return;
             }
 
@@ -33,9 +38,13 @@ namespace ThisNamespace {
             }
                 
             Vector3 playerPos = _orbitCamera.transform.position;
-            if (yawHints != null) {
+            if (yawHints != null && yawHints.Length > 0) {
                 YawHint closest = GetClosestYawHint(playerPos);
                 _orbitCamera.OverrideYaw += closest.OverrideYaw;
+            }
+
+            if (distHint != null) {
+                _orbitCamera.OverrideDist += distHint.OverrideDistance;
             }
         }
 
@@ -63,6 +72,10 @@ namespace ThisNamespace {
                 foreach (var yawHint in yawHints) {
                     cam.OverrideYaw -= yawHint.OverrideYaw;
                 }
+            }
+
+            if (distHint != null) {
+                cam.OverrideDist -= distHint.OverrideDistance;
             }
         }
 

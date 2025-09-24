@@ -1,3 +1,4 @@
+using System;
 using ThisNamespace;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ public class PlayerMovement : MonoBehaviour {
     Vector3 previousPos = Vector3.zero;
     private void Awake() {
         _t = transform;
-        previousPos = _t.position;
+        previousPos = rb.position;
     }
 
     private void Start() {
@@ -32,7 +33,19 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void Update() {
-        if (_playerInput.Move.sqrMagnitude > 0.0001f) {
+        Vector3 v = previousPos - rb.position;
+        previousPos = rb.position;
+        if (v.magnitude > 0.1f) {
+            v = v.normalized;
+            float angle = Mathf.Atan2(-v.x, -v.z) * Mathf.Rad2Deg;
+            angle = angle < 0 ? angle + 360 : angle;
+
+            artRoot.rotation = Quaternion.Euler(0f, angle, 0f);
+        }
+    }
+
+    private void FixedUpdate() {
+        if (_playerInput.Move.magnitude > 0.01f) {
             Vector3 inputDir = new Vector3(_playerInput.Move.x, 0f, _playerInput.Move.y).normalized;
             _velocity = inputDir * moveSpeed;
         } else {
@@ -41,29 +54,18 @@ public class PlayerMovement : MonoBehaviour {
             } else {
                 float mag = _velocity.magnitude;
                 Vector3 dir = _velocity.normalized;
-                mag = mag.ExponentialDecay(0, drag, Time.deltaTime);
+                mag = ExponentialDecay(mag, 0, drag, Time.fixedDeltaTime);
                 _velocity = dir * mag;
             }
         }
 
         if (rb != null) {
-            rb.MovePosition(_t.position + _velocity * Time.deltaTime);
-        }
-        
-        Vector3 v = previousPos - _t.position;
-        previousPos = _t.position;
-        if (v.magnitude > 0.1f) {
-            v = v.normalized;
-            float angle = Mathf.Atan2(-v.x, -v.z) * Mathf.Rad2Deg;
-            angle = angle < 0 ? angle + 360 : angle;
-
-            artRoot.rotation = Quaternion.Euler(0f, angle, 0f);
+            rb.MovePosition(rb.position + _velocity * Time.fixedDeltaTime);
         }
 
-
-        if (Physics.SphereCast(_t.position, groundedCheckRadius, Vector3.down, out RaycastHit hit, 20, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
+        if (Physics.SphereCast(rb.position, groundedCheckRadius, Vector3.down, out RaycastHit hit, 20, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
             _groundPosition = hit.point;
-            if (Vector3.Distance(hit.point, _t.position) < 0.01f) {
+            if (Vector3.Distance(hit.point, rb.position) < 0.01f) {
                 _grounded = true;
             } else {
                 _grounded = false;
@@ -71,5 +73,24 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
     
+    
+    public static float ExponentialDecay(float current, float target, float decayRate, float deltaTime)
+    {
+        // Ensure decayRate is non-negative
+        if (decayRate < 0f)
+            decayRate = 0f;
+
+        // Compute exponential interpolation factor
+        float t = 1f - Mathf.Exp(-decayRate * deltaTime);
+
+        // Interpolate toward target
+        float result = Mathf.Lerp(current, target, t);
+
+        // Snap to target if close enough
+        if (Mathf.Abs(result - target) < 0.0001f)
+            result = target;
+
+        return result;
+    }
 
 }

@@ -8,6 +8,9 @@ public class PlayerCameraV2Debug : MonoBehaviour {
     [SerializeField] private int distanceArcDivisions = 20;
     [SerializeField] private Transform playerRoot;
     private void OnDrawGizmos() {
+        if (!this.enabled) {
+            return;
+        }
         CameraParams param = cam.CameraParams;
         Matrix4x4 m = Matrix4x4.TRS(playerRoot.position, Quaternion.AngleAxis(param.yaw, Vector3.up), Vector3.one);
         Vector3 trackingPoint = Vector3.up * settings.TrackingHeight;

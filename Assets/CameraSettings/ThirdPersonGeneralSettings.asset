@@ -12,10 +12,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99ec4eebe752d29489214e15ab8b123f, type: 3}
   m_Name: ThirdPersonGeneralSettings
   m_EditorClassIdentifier: 
-  distanceDecayRate: 30
-  maxPitch: 80
-  minPitch: -30
-  cameraSpeed: 0.203
+  distanceDecayRate: 27
+  maxPitch: 85
+  minPitch: -25
+  cameraSpeed: 15
+  yawDecay: 0
+  yFramingXPitch:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2.7823753
+      outSlope: 2.7823753
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.059613228
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  xFramingXPitch:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   gravityDelay: 2
   yawGravityVelocityThreshold: 0.07
   yawGravityFrequency: 0.75
@@ -23,8 +72,8 @@ MonoBehaviour:
   yawGravityResponse: 1
   yawGravityStrength: 0.5
   yawGravityMinMaxStrength: {x: 0.2, y: 1.2}
-  yawGravityFrontDeadZone: 10
-  yawGravityBackDeadZone: 25
+  yawGravityFrontDeadZone: 2
+  yawGravityBackDeadZone: 175
   yawGravityCrossSampler:
     serializedVersion: 2
     m_Curve:

@@ -6,9 +6,12 @@ public class OrbitCameraGeneralConfig : ScriptableObject {
     [SerializeField] private float distanceDecayRate;
     [SerializeField] private float maxPitch;
     [SerializeField] private float minPitch;
-    [Range(0f, 1f)]
     [SerializeField] private float cameraSpeed;
-
+    [SerializeField] private float yawDecay = 16;
+    [SerializeField] private AnimationCurve yFramingXPitch;
+    [SerializeField] private AnimationCurve xFramingXPitch;
+    
+    
     [Header("Pitch & Yaw Gravity")]
     [Tooltip("Delay (in seconds) after no input received before we allow yaw gravity to take effect")]
     [SerializeField] private float gravityDelay;
@@ -24,6 +27,7 @@ public class OrbitCameraGeneralConfig : ScriptableObject {
     [SerializeField] private float yawGravityFrontDeadZone;
     [SerializeField] private float yawGravityBackDeadZone;
     [SerializeField] private AnimationCurve yawGravityCrossSampler;
+
 
     [Header("Pitch Gravity")] 
     [SerializeField] private float pitchGravityDelay;
@@ -52,4 +56,7 @@ public class OrbitCameraGeneralConfig : ScriptableObject {
     public float PitchGravityDamping =>pitchGravityDamping;
     public float PitchGravityResponse =>pitchGravityResponse;
     public float PitchGravityStrength =>pitchGravityStrength;
+    public float YawDecay => yawDecay;
+    public AnimationCurve XFramingXPitch => xFramingXPitch;
+    public AnimationCurve YFramingXPitch => yFramingXPitch;
 }

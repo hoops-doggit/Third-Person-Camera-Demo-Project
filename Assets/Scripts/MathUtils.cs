@@ -16,6 +16,12 @@ namespace ThisNamespace {
         public static float ExponentialDecay(this float current, float target, float decay, float deltaTime) {
             return target + (current - target) * Mathf.Exp(-decay * deltaTime);
         }
+        
+        public static float ExponentialDecayAngle(this float current, float target, float decay, float deltaTime) {
+            float delta = Mathf.DeltaAngle(current, target);
+            float decayedDelta = delta * Mathf.Exp(-decay * deltaTime);
+            return target + decayedDelta;
+        }
 
         public static float Closest(float value, float min, float max) {
             float midPoint = (min + max) * 0.5f;
