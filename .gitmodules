@@ -1,0 +1,3 @@
+[submodule "Camera-Systems"]
+	path = Camera-Systems
+	url = https://github.com/hoops-doggit/Camera-Systems.git
