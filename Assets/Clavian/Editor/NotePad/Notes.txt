@@ -3,8 +3,7 @@ code that moves camera out of objects when penetration occurs
 
 
 Pitch gravity 
-
-Terrain to test on
+
 
 Later
 Remove IVirtualCamera.Active if I don't use it.

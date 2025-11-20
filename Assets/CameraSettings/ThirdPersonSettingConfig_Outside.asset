@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Outside Settings
   trackingHeight: 2.19
   minDistance: 1.5
-  midDistance: 0.683
+  midDistance: 0.4
   maxDistance: 5.88
   fieldOfView: 60
   sphereCastRadius: 0.4
@@ -94,6 +94,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  xFraming: -0.207
+  xFraming: 0
   yFraming: 0
   minMaxPreferredPitch: {x: 20, y: 30}
