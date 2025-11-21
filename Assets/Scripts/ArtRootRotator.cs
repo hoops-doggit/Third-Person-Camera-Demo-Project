@@ -1,8 +1,8 @@
+using System;
 using CameraSystem;
 using UnityEngine;
 
-public class ArtRootRotator : MonoBehaviour
-{
+public class ArtRootRotator : MonoBehaviour {
     [SerializeField] private Transform _artRoot;
     [SerializeField] private Rigidbody _playerRigidBody;
     private Vector3 _previousPos;
@@ -11,45 +11,35 @@ public class ArtRootRotator : MonoBehaviour
         CameraManager.Instance.OnCameraUpdateFinished += AfterCameraUpdate;
     }
 
-    private void OnDestroy()
-    {
-        if (CameraManager.Exists)
-        {
+    private void OnDestroy() {
+        if (CameraManager.Exists) {
             CameraManager.Instance.OnCameraUpdateFinished -= AfterCameraUpdate;
         }
     }
 
     private void AfterCameraUpdate() {
-        if (PlayerInput.Exists)
-        {
+        if (PlayerInput.Exists) {
             Vector2 move = PlayerInput.Instance.Move;
-            if (move.sqrMagnitude > 0.001f)
-            {
+            if (move.sqrMagnitude > 0.001f) {
                 FaceInputDirection(move);
-            }
-            else
-            {
+            } else {
                 FaceVelocityDirection();
             }
-        }
-        else
-        {
+        } else {
             FaceVelocityDirection();
         }
+        _previousPos = _playerRigidBody.position;
     }
 
-    private void FaceInputDirection(Vector2 move)
-    {
+    private void FaceInputDirection(Vector2 move) {
         Vector2 v = move.normalized;
         float angle = Mathf.Atan2(v.x, v.y) * Mathf.Rad2Deg;
         angle = angle < 0 ? angle + 360 : angle;
         _artRoot.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 
-    private void FaceVelocityDirection()
-    {
+    private void FaceVelocityDirection() {
         Vector3 v = _previousPos - _playerRigidBody.position;
-        _previousPos = _playerRigidBody.position;
         if (v.magnitude > 0.1f) {
             v = v.normalized;
             float angle = Mathf.Atan2(-v.x, -v.z) * Mathf.Rad2Deg;
@@ -57,5 +47,13 @@ public class ArtRootRotator : MonoBehaviour
 
             _artRoot.rotation = Quaternion.Euler(0f, angle, 0f);
         }
+    }
+
+    private void OnDrawGizmos() {
+        Transform t = _artRoot;
+        Vector3 a = t.position + Vector3.up;
+        Vector3 b = t.forward * 5 + Vector3.up + t.position;
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(a,b);
     }
 }

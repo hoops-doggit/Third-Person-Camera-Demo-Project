@@ -9706,12 +9706,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 578960244123679711, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
+      propertyPath: _cameraParams.trackingPoint.x
+      value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 578960244123679711, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: _cameraParams.trackingPoint.z
-      value: 0
+      value: -1.98
       objectReference: {fileID: 0}
     - target: {fileID: 1753070739879010893, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1753070739879010893, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9719,7 +9723,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1753070739879010893, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1.98
       objectReference: {fileID: 0}
     - target: {fileID: 1753070739879010893, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: m_LocalRotation.w

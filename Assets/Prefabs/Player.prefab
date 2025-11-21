@@ -647,7 +647,7 @@ MonoBehaviour:
       m_RotationOrder: 4
   cam: {fileID: 996645850871941529}
   _cameraParams:
-    trackingPoint: {x: 0, y: 2.19, z: 0}
+    trackingPoint: {x: -0.3, y: 2.19, z: -1.98}
     framing: {x: 0, y: 0}
     distance: 7.59
     pitch: 30.7
