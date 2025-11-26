@@ -9614,7 +9614,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 91419979338234166, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
       propertyPath: m_Name
-      value: Manager Stuff
+      value: Managers
       objectReference: {fileID: 0}
     - target: {fileID: 91419979338234166, guid: 89da492cfa4687244af30170ae5d7eed, type: 3}
       propertyPath: m_IsActive
@@ -9706,6 +9706,22 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 578960244123679711, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
+      propertyPath: yawSpring.type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 578960244123679711, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
+      propertyPath: yawSpring.m_Response
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 578960244123679711, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
+      propertyPath: yawSpring.m_Frequency
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 578960244123679711, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
+      propertyPath: yawSpring.m_DampingRatio
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 578960244123679711, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: _cameraParams.trackingPoint.x
       value: -0.3
       objectReference: {fileID: 0}
@@ -9751,6 +9767,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1753070739879010893, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4801481693169904772, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4917033487408183633, guid: ec59fe1b7a8bc4a408305d30357d104c, type: 3}
